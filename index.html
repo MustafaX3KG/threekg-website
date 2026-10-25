@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreeKG® — Design Studio</title>
+  <meta name="description" content="ThreeKG is a minimal design studio. Websites, brand identities and creative development — work shown, not explained." />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+
+  <!-- custom cursor -->
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- work hover preview -->
+  <div class="work-preview" aria-hidden="true">
+    <div class="work-preview__tile"></div>
+    <span class="work-preview__label mono"></span>
+  </div>
+
+  <!-- menu overlay -->
+  <div class="menu" id="menu" aria-hidden="true">
+    <div class="menu__inner">
+      <span class="mono menu__cap">(navigation)</span>
+      <nav class="menu__nav">
+        <a href="#top"><span class="mono">01</span> Index</a>
+        <a href="#work"><span class="mono">02</span> Work</a>
+        <a href="#studio"><span class="mono">03</span> Studio</a>
+        <a href="#contact"><span class="mono">04</span> Contact</a>
+      </nav>
+      <div class="menu__foot">
+        <a href="mailto:hello@threekg.studio">hello@threekg.studio</a>
+        <div class="menu__socials">
+          <a href="#" rel="noopener">Instagram ↗</a>
+          <a href="#" rel="noopener">LinkedIn ↗</a>
+          <a href="#" rel="noopener">Behance ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#top">ThreeKG<span class="brand__reg">®</span></a>
+    <div class="mono site-header__meta">
+      <span class="avail"><i class="avail__dot"></i>Available for projects</span>
+      <span class="hide-sm">minimalism · space · motion</span>
+      <span id="clock">--:--:--</span>
+      <span id="tz"></span>
+    </div>
+    <button class="menu-toggle mono" id="menuToggle" aria-controls="menu" aria-expanded="false">menu</button>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <canvas class="hero__canvas" id="field" aria-hidden="true"></canvas>
+      <div class="hero__inner">
+        <p class="mono hero__kicker reveal">(ThreeKG — independent design studio, est. 2021)</p>
+        <h1 class="hero__title">
+          <span class="reveal">We build quiet,</span>
+          <span class="reveal">confident work</span>
+          <span class="reveal hero__title--soft">for brands that whisper<em>&nbsp;loudly.</em></span>
+        </h1>
+        <div class="hero__foot">
+          <span class="mono">scroll to explore ↓</span>
+          <span class="mono hide-sm">working worldwide</span>
+          <span class="mono hide-sm">[01/04]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MARQUEE ================= -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span class="marquee__set">
+          <span>Brand Identity</span><i>✳</i><span>Web Design</span><i>✳</i><span>Creative Development</span><i>✳</i><span>Art Direction</span><i>✳</i><span>Motion</span><i>✳</i>
+        </span>
+        <span class="marquee__set">
+          <span>Brand Identity</span><i>✳</i><span>Web Design</span><i>✳</i><span>Creative Development</span><i>✳</i><span>Art Direction</span><i>✳</i><span>Motion</span><i>✳</i>
+        </span>
+      </div>
+    </section>
+
+    <!-- ================= WORK ================= -->
+    <section class="work" id="work">
+      <div class="section-head reveal">
+        <span class="mono">[02 — selected work]</span>
+        <span class="mono">2019 → 2026</span>
+        <h2>The work<br /><em>speaks first.</em></h2>
+      </div>
+
+      <ul class="work__list" id="workList">
+        <li class="work__row reveal" data-grad="wp-1" data-name="Halcyon Hotels">
+          <span class="mono work__num">01</span>
+          <a class="work__link" href="#">
+            <span class="work__name">Halcyon Hotels</span>
+            <span class="mono work__tag">Brand identity</span>
+            <span class="mono work__year">/2026</span>
+          </a>
+        </li>
+        <li class="work__row reveal" data-grad="wp-2" data-name="Meridian Motion">
+          <span class="mono work__num">02</span>
+          <a class="work__link" href="#">
+            <span class="work__name">Meridian Motion</span>
+            <span class="mono work__tag">Website</span>
+            <span class="mono work__year">/2025</span>
+          </a>
+        </li>
+        <li class="work__row reveal" data-grad="wp-3" data-name="Studio Ferro">
+          <span class="mono work__num">03</span>
+          <a class="work__link" href="#">
+            <span class="work__name">Studio Ferro</span>
+            <span class="mono work__tag">E-commerce</span>
+            <span class="mono work__year">/2025</span>
+          </a>
+        </li>
+        <li class="work__row reveal" data-grad="wp-4" data-name="North Light Archive">
+          <span class="mono work__num">04</span>
+          <a class="work__link" href="#">
+            <span class="work__name">North Light Archive</span>
+            <span class="mono work__tag">Art direction</span>
+            <span class="mono work__year">/2025</span>
+          </a>
+        </li>
+        <li class="work__row reveal" data-grad="wp-5" data-name="Onto &amp; Co.">
+          <span class="mono work__num">05</span>
+          <a class="work__link" href="#">
+            <span class="work__name">Onto &amp; Co.</span>
+            <span class="mono work__tag">Identity system</span>
+            <span class="mono work__year">/2024</span>
+          </a>
+        </li>
+        <li class="work__row reveal" data-grad="wp-6" data-name="Vellum Editions">
+          <span class="mono work__num">06</span>
+          <a class="work__link" href="#">
+            <span class="work__name">Vellum Editions</span>
+            <span class="mono work__tag">Website</span>
+            <span class="mono work__year">/2024</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="work__foot reveal">
+        <span class="mono">(06) featured projects</span>
+        <a class="mono" href="mailto:hello@threekg.studio">full archive on request ↗</a>
+      </div>
+    </section>
+
+    <!-- ================= STUDIO ================= -->
+    <section class="studio" id="studio">
+      <div class="section-head reveal">
+        <span class="mono">[03 — the studio]</span>
+        <span class="mono">est. 2021</span>
+        <h2>Enough range to win<br /><em>the brief. Small enough</em><br /><em>to care about it.</em></h2>
+      </div>
+      <div class="studio__grid">
+        <p class="reveal studio__lead">
+          ThreeKG is an independent design practice working with founders and
+          cultural brands who'd rather show than explain. We design identities,
+          websites and the small details in between — with a taste for the quiet
+          confidence that makes work memorable.
+        </p>
+        <p class="reveal studio__body">
+          We take on a handful of projects at a time so the people you brief
+          are the people doing the work. Every project starts with listening,
+          ends with launch, and hopefully starts a conversation that lasts
+          longer than the invoices.
+        </p>
+      </div>
+
+      <ul class="studio__stats reveal">
+        <li><span class="mono stat__num">48</span><span class="mono stat__cap">projects shipped</span></li>
+        <li><span class="mono stat__num">30</span><span class="mono stat__cap">clients worldwide</span></li>
+        <li><span class="mono stat__num">11</span><span class="mono stat__cap">industry awards</span></li>
+        <li><span class="mono stat__num">05</span><span class="mono stat__cap">years in practice</span></li>
+      </ul>
+    </section>
+
+    <!-- ================= SERVICES ================= -->
+    <section class="services" id="services">
+      <div class="section-head reveal">
+        <span class="mono">[04 — what we do]</span>
+        <span class="mono">capabilities</span>
+        <h2>Five ways in.</h2>
+      </div>
+      <ul class="services__list">
+        <li class="services__row reveal"><span class="mono">01</span><span class="services__name">Brand identity</span><span class="mono services__hint">naming · systems · guidelines</span></li>
+        <li class="services__row reveal"><span class="mono">02</span><span class="services__name">Web design</span><span class="mono services__hint">strategy · UX · art direction</span></li>
+        <li class="services__row reveal"><span class="mono">03</span><span class="services__name">Creative development</span><span class="mono services__hint">canvas · motion · interaction</span></li>
+        <li class="services__row reveal"><span class="mono">04</span><span class="services__name">Art direction</span><span class="mono services__hint">campaigns · editorial · image</span></li>
+        <li class="services__row reveal"><span class="mono">05</span><span class="services__name">Motion &amp; interaction</span><span class="mono services__hint">micro-interactions · video</span></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER / CONTACT ================= -->
+  <footer class="footer" id="contact">
+    <span class="mono footer__cap reveal">(get in touch)</span>
+    <a class="footer__cta reveal" href="mailto:hello@threekg.studio">
+      Start a project
+      <span class="footer__arrow">→</span>
+    </a>
+    <div class="footer__grid">
+      <div class="mono footer__col">
+        <span class="footer__label">studio</span>
+        <span>ThreeKG®</span>
+        <span>working worldwide</span>
+        <span id="clockFooter">--:--:--</span>
+      </div>
+      <div class="mono footer__col">
+        <span class="footer__label">contact</span>
+        <a href="mailto:hello@threekg.studio">hello@threekg.studio</a>
+        <a href="#" rel="noopener">Instagram ↗</a>
+        <a href="#" rel="noopener">LinkedIn ↗</a>
+        <a href="#" rel="noopener">Behance ↗</a>
+      </div>
+      <div class="mono footer__col">
+        <span class="footer__label">site</span>
+        <a href="#top">back to top ↑</a>
+        <span>© 2021–2026 ThreeKG</span>
+        <span>made with quiet intent</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+</body>
+</html>
