@@ -557,7 +557,7 @@ body::after {
 }
 
 /* ============================================================
-   clients grid — square tiles, 5 per row, no hover
+   clients grid — 153px squares, 14px gap, no hover
    ============================================================ */
 .clients {
   padding: clamp(6rem, 12vw, 11rem) var(--pad) 0;
@@ -565,36 +565,39 @@ body::after {
 
 .clients__grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  grid-template-columns: repeat(5, 153px);
+  gap: 14px;
   margin-bottom: 2rem;
 }
 .clients__tile {
+  width: 153px;
+  height: 153px;
+  border: 1px solid var(--line);
   background: var(--bg);
-  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
   text-align: center;
-  padding: clamp(0.75rem, 1.6vw, 1.4rem);
+  padding: 0.75rem;
 }
 .clients__name {
-  font-size: clamp(0.95rem, 1.45vw, 1.3rem);
+  font-size: 1rem;
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.15;
 }
 .clients__tag { color: var(--muted); }
 
-@media (max-width: 900px) {
-  .clients__grid { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1024px) {
+  .clients__grid { grid-template-columns: repeat(4, 153px); }
 }
-@media (max-width: 600px) {
-  .clients__grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 720px) {
+  .clients__grid { grid-template-columns: repeat(3, 153px); }
+}
+@media (max-width: 520px) {
+  .clients__grid { grid-template-columns: repeat(2, 153px); }
 
 @media (max-width: 480px) {
   .showreel__overlay { flex-direction: column; align-items: flex-start; }
