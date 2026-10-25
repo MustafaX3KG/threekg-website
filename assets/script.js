@@ -299,7 +299,7 @@
      ping-pongs; plays a one-shot construct on scroll reveal
      ---------------------------------------------------------- */
   (function servicesSymbols() {
-    const buttons = document.querySelectorAll(".svc-card__symbol");
+    const buttons = document.querySelectorAll(".symbol-btn");
     if (!buttons.length) return;
 
     const NS = "http://www.w3.org/2000/svg";
@@ -517,8 +517,9 @@
     const coarse = window.matchMedia("(hover: none)").matches;
 
     states.forEach(function (st) {
-      st.card.addEventListener("mouseenter", function () { choose(st.key); });
-      st.card.addEventListener("mouseleave", function () { choose(pinned || null); });
+      const zone = st.button.closest(".svc-card") || st.button;
+      zone.addEventListener("mouseenter", function () { choose(st.key); });
+      zone.addEventListener("mouseleave", function () { choose(pinned || null); });
       st.button.addEventListener("focus", function () { choose(st.key); });
       st.button.addEventListener("blur", function () { if (pinned !== st.key) choose(pinned || null); });
       st.button.addEventListener("click", function (e) {
@@ -533,7 +534,7 @@
       if (e.key === "Escape") { pinned = null; choose(null); }
     });
     document.addEventListener("pointerdown", function (e) {
-      if (pinned && !e.target.closest(".svc-card")) { pinned = null; choose(null); }
+      if (pinned && !e.target.closest(".svc-card, .work__symbol")) { pinned = null; choose(null); }
     });
 
     /* one-shot construct when a card scrolls into view */
@@ -542,19 +543,25 @@
       const svcIO = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
-          const card = entry.target;
-          const key = card.querySelector(".svc-card__symbol").dataset.category;
-          const col = all.indexOf(card) % 3;
-          const st = states.get(key);
+          let button, delay = 0;
+          if (entry.target.classList.contains("svc-card")) {
+            button = entry.target.querySelector(".symbol-btn");
+            delay = (all.indexOf(entry.target) % 3) * 170;
+          } else {
+            button = entry.target;
+          }
+          const st = states.get(button.dataset.category);
           setTimeout(function () {
             if (st.key === active) return; // already animating via hover
             st.reveal = true;
             st.revealStart = performance.now();
-          }, col * 170);
-          svcIO.unobserve(card);
+          }, delay);
+          svcIO.unobserve(entry.target);
         });
       }, { threshold: 0.35 });
       all.forEach(function (card) { svcIO.observe(card); });
+      const hex = document.querySelector(".work__symbol");
+      if (hex) svcIO.observe(hex);
     }
 
     requestAnimationFrame(tick);
