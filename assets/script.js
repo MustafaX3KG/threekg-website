@@ -163,54 +163,15 @@
       requestAnimationFrame(cursorLoop);
     })();
 
-    document.querySelectorAll("a, button, .work__row").forEach(function (el) {
+    document.querySelectorAll("a, button, .work-card").forEach(function (el) {
       el.addEventListener("mouseenter", function () { cursor.classList.add("is-hover"); });
       el.addEventListener("mouseleave", function () { cursor.classList.remove("is-hover"); });
     });
   }
 
   /* ----------------------------------------------------------
-     work row hover preview follower
-     ---------------------------------------------------------- */
-  const preview = document.querySelector(".work-preview");
-  const previewTile = document.querySelector(".work-preview__tile");
-  const previewLabel = document.querySelector(".work-preview__label");
-  const rows = document.querySelectorAll(".work__row");
-
-  if (preview && window.matchMedia("(hover: hover) and (min-width: 900px)").matches) {
-    let px = 0, py = 0, txp = 0, typ = 0, active = false;
-
-    window.addEventListener("pointermove", function (e) {
-      txp = e.clientX;
-      typ = e.clientY;
-    }, { passive: true });
-
-    (function previewLoop() {
-      px += (txp - px) * 0.1;
-      py += (typ - py) * 0.1;
-      if (active) {
-        preview.style.left = px + "px";
-        preview.style.top = py + "px";
-      }
-      requestAnimationFrame(previewLoop);
-    })();
-
-    rows.forEach(function (row) {
-      row.addEventListener("mouseenter", function () {
-        active = true;
-        previewTile.className = "work-preview__tile " + row.dataset.grad;
-        previewLabel.textContent = row.dataset.name;
-        preview.classList.add("is-visible");
-      });
-      row.addEventListener("mouseleave", function () {
-        active = false;
-        preview.classList.remove("is-visible");
-      });
-    });
-  }
-
-  /* ----------------------------------------------------------
-     work name → preview label fallback (touch-safe, no-op)
+     work gallery cards (no floating preview needed —
+     thumbnails live in the masonry grid)
      ---------------------------------------------------------- */
 
   /* ----------------------------------------------------------
