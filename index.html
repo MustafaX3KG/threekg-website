@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/style.css?v=20261025-1" />
+  <link rel="stylesheet" href="assets/style.css?v=20261025-2" />
 </head>
 <body class="is-loading">
 
@@ -257,53 +257,50 @@
     <!-- ================= SERVICES ================= -->
     <section class="services" id="services">
       <div class="services__inner">
-        <div class="services__head">
+        <div class="services__stage">
           <div class="section-head reveal">
             <span class="mono">[06 — what we do]</span>
             <span class="mono">capabilities</span>
             <h2>Six ways in.</h2>
           </div>
+          <div class="services__motion reveal" aria-live="polite">
+            <video class="services__video" muted playsinline preload="auto" aria-hidden="true">
+              <source src="assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/00_3KG_Precision_Full_Sequence.mp4" type="video/mp4" />
+            </video>
+            <div class="services__motion-meta mono">
+              <span class="services__motion-index">00 / 06</span>
+              <span class="services__motion-label">scroll to explore</span>
+            </div>
+          </div>
         </div>
-        <ul class="services__grid">
-          <li class="svc-card reveal">
-            <button type="button" class="symbol-btn svc-card__symbol" data-category="brand" aria-label="Brand identity — preview symbol motion" aria-pressed="false">
-              <svg viewBox="-145 -145 290 290" aria-hidden="true"></svg>
-            </button>
+        <ul class="services__list">
+          <li class="svc-card services__card" data-service="brand" data-motion="assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/02_Brand_Dot_to_Circle.mp4">
+            <span class="mono services__number">01</span>
             <h3 class="svc-card__name">Brand identity</h3>
             <p class="mono svc-card__hint">naming · systems · guidelines</p>
           </li>
-          <li class="svc-card reveal">
-            <button type="button" class="symbol-btn svc-card__symbol" data-category="design" aria-label="Web design — preview symbol motion" aria-pressed="false">
-              <svg viewBox="-145 -145 290 290" aria-hidden="true"></svg>
-            </button>
+          <li class="svc-card services__card" data-service="design" data-motion="assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/03_Design_Dot_to_Plus.mp4">
+            <span class="mono services__number">02</span>
             <h3 class="svc-card__name">Web design</h3>
             <p class="mono svc-card__hint">strategy · UX · art direction</p>
           </li>
-          <li class="svc-card reveal">
-            <button type="button" class="symbol-btn svc-card__symbol" data-category="studio" aria-label="Creative development — preview symbol motion" aria-pressed="false">
-              <svg viewBox="-145 -145 290 290" aria-hidden="true"></svg>
-            </button>
+          <li class="svc-card services__card" data-service="studio" data-motion="assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/01_Studio_Dot_to_Diamond.mp4">
+            <span class="mono services__number">03</span>
             <h3 class="svc-card__name">Creative development</h3>
             <p class="mono svc-card__hint">canvas · motion · interaction</p>
           </li>
-          <li class="svc-card reveal">
-            <button type="button" class="symbol-btn svc-card__symbol" data-category="campaigns" aria-label="Art direction — preview symbol motion" aria-pressed="false">
-              <svg viewBox="-145 -145 290 290" aria-hidden="true"></svg>
-            </button>
+          <li class="svc-card services__card" data-service="campaigns" data-motion="assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/04_Campaigns_Dot_to_Star.mp4">
+            <span class="mono services__number">04</span>
             <h3 class="svc-card__name">Art direction</h3>
             <p class="mono svc-card__hint">campaigns · editorial · image</p>
           </li>
-          <li class="svc-card reveal">
-            <button type="button" class="symbol-btn svc-card__symbol" data-category="production" aria-label="Production — preview symbol motion" aria-pressed="false">
-              <svg viewBox="-145 -145 290 290" aria-hidden="true"></svg>
-            </button>
+          <li class="svc-card services__card" data-service="production" data-motion="assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/05_Production_Dot_to_Triangle.mp4">
+            <span class="mono services__number">05</span>
             <h3 class="svc-card__name">Production</h3>
             <p class="mono svc-card__hint">film · shoots · content</p>
           </li>
-          <li class="svc-card reveal">
-            <button type="button" class="symbol-btn svc-card__symbol" data-category="xperience" aria-label="Motion and interaction — preview symbol motion" aria-pressed="false">
-              <svg viewBox="-145 -145 290 290" aria-hidden="true"></svg>
-            </button>
+          <li class="svc-card services__card" data-service="xperience" data-motion="assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/07_Xperience_Dot_to_X.mp4">
+            <span class="mono services__number">06</span>
             <h3 class="svc-card__name">Motion &amp; interaction</h3>
             <p class="mono svc-card__hint">micro-interactions · video</p>
           </li>
@@ -343,6 +340,6 @@
     </div>
   </footer>
 
-  <script src="assets/script.js"></script>
+  <script src="assets/script.js?v=20261025-2"></script>
 </body>
 </html>

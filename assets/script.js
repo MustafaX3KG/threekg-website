@@ -539,7 +539,8 @@
 
     /* one-shot construct when a card scrolls into view */
     if ("IntersectionObserver" in window) {
-      const all = Array.prototype.slice.call(document.querySelectorAll(".svc-card"));
+      const all = Array.prototype.slice.call(document.querySelectorAll(".svc-card .symbol-btn"))
+        .map(function (button) { return button.closest(".svc-card"); });
       const svcIO = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
@@ -565,6 +566,85 @@
     }
 
     requestAnimationFrame(tick);
+  })();
+
+  /* ----------------------------------------------------------
+     services — sticky video keyed to the card nearest the viewport
+     ---------------------------------------------------------- */
+  (function servicesScrollStory() {
+    const section = document.querySelector(".services");
+    const video = document.querySelector(".services__video");
+    const cards = Array.prototype.slice.call(document.querySelectorAll(".services__card"));
+    const indexLabel = document.querySelector(".services__motion-index");
+    const nameLabel = document.querySelector(".services__motion-label");
+    if (!section || !video || !cards.length) return;
+
+    const intro = "assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/00_3KG_Precision_Full_Sequence.mp4";
+    let activeIndex = -1;
+    let introStarted = false;
+    let ticking = false;
+
+    function play(src, loop) {
+      const absolute = new URL(src, document.baseURI).href;
+      video.loop = loop;
+      if (video.currentSrc !== absolute) {
+        video.src = src;
+        video.load();
+      } else {
+        video.currentTime = 0;
+      }
+      const promise = video.play();
+      if (promise) promise.catch(function () {});
+    }
+
+    function activate(index) {
+      if (index === activeIndex) return;
+      activeIndex = index;
+      cards.forEach(function (card, i) {
+        card.classList.toggle("is-active", i === index);
+        card.setAttribute("aria-current", i === index ? "step" : "false");
+      });
+      const card = cards[index];
+      play(card.dataset.motion, false);
+      if (indexLabel) indexLabel.textContent = String(index + 1).padStart(2, "0") + " / " + String(cards.length).padStart(2, "0");
+      if (nameLabel) nameLabel.textContent = card.querySelector(".svc-card__name").textContent;
+    }
+
+    function update() {
+      ticking = false;
+      const sectionRect = section.getBoundingClientRect();
+      const inSection = sectionRect.top < innerHeight * 0.75 && sectionRect.bottom > innerHeight * 0.25;
+      if (!inSection) return;
+
+      if (!introStarted && sectionRect.top < innerHeight) {
+        introStarted = true;
+        play(intro, true);
+      }
+
+      const target = innerHeight * 0.58;
+      let nearest = -1;
+      let distance = Infinity;
+      cards.forEach(function (card, i) {
+        const rect = card.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const nextDistance = Math.abs(center - target);
+        if (nextDistance < distance && rect.bottom > innerHeight * 0.18 && rect.top < innerHeight * 0.82) {
+          distance = nextDistance;
+          nearest = i;
+        }
+      });
+      if (nearest >= 0) activate(nearest);
+    }
+
+    function queueUpdate() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener("scroll", queueUpdate, { passive: true });
+    window.addEventListener("resize", queueUpdate);
+    queueUpdate();
   })();
 
   /* ----------------------------------------------------------
