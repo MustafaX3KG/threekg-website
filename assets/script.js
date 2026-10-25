@@ -579,7 +579,7 @@
     const nameLabel = document.querySelector(".services__motion-label");
     if (!section || !video || !cards.length) return;
 
-    const intro = "assets/brand/3KG_Symbol_Motion_Exports_v1/MP4_Previews/00_3KG_Precision_Full_Sequence.mp4";
+    const intro = "assets/brand/motion/services-intro.mp4";
     let activeIndex = -1;
     let introStarted = false;
     let ticking = false;
