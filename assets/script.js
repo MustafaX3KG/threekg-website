@@ -569,71 +569,105 @@
   })();
 
   /* ----------------------------------------------------------
-     services — sticky video keyed to the card nearest the viewport
+     services — transparent SVG symbols scrubbed by scroll
      ---------------------------------------------------------- */
   (function servicesScrollStory() {
     const section = document.querySelector(".services");
-    const video = document.querySelector(".services__video");
     const cards = Array.prototype.slice.call(document.querySelectorAll(".services__card"));
+    const fromIcon = document.querySelector(".services__icon--from");
+    const toIcon = document.querySelector(".services__icon--to");
+    const dot = document.querySelector(".services__morph-dot");
     const indexLabel = document.querySelector(".services__motion-index");
     const nameLabel = document.querySelector(".services__motion-label");
-    if (!section || !video || !cards.length) return;
+    if (!section || !cards.length || !fromIcon || !toIcon || !dot) return;
 
-    const intro = "assets/brand/motion/services-intro.mp4";
+    let segment = -1;
     let activeIndex = -1;
-    let introStarted = false;
     let ticking = false;
+    const clamp01 = function (x) { return Math.max(0, Math.min(1, x)); };
+    const smooth = function (x) { x = clamp01(x); return x * x * (3 - 2 * x); };
 
-    function play(src, loop) {
-      const absolute = new URL(src, document.baseURI).href;
-      video.loop = loop;
-      if (video.currentSrc !== absolute) {
-        video.src = src;
-        video.load();
-      } else {
-        video.currentTime = 0;
-      }
-      const promise = video.play();
-      if (promise) promise.catch(function () {});
-    }
+    cards.forEach(function (card) {
+      const preload = new Image();
+      preload.src = card.dataset.icon;
+    });
 
-    function activate(index) {
+    function setActive(index) {
       if (index === activeIndex) return;
       activeIndex = index;
       cards.forEach(function (card, i) {
         card.classList.toggle("is-active", i === index);
         card.setAttribute("aria-current", i === index ? "step" : "false");
       });
-      const card = cards[index];
-      play(card.dataset.motion, false);
+      if (index < 0) {
+        if (indexLabel) indexLabel.textContent = "00 / " + String(cards.length).padStart(2, "0");
+        if (nameLabel) nameLabel.textContent = "scroll to explore";
+        return;
+      }
       if (indexLabel) indexLabel.textContent = String(index + 1).padStart(2, "0") + " / " + String(cards.length).padStart(2, "0");
-      if (nameLabel) nameLabel.textContent = card.querySelector(".svc-card__name").textContent;
+      if (nameLabel) nameLabel.textContent = cards[index].querySelector(".svc-card__name").textContent;
+    }
+
+    function setSegment(index) {
+      if (index === segment) return;
+      segment = index;
+      fromIcon.src = cards[index].dataset.icon;
+      toIcon.src = cards[Math.min(index + 1, cards.length - 1)].dataset.icon;
+    }
+
+    function draw(index, progress, visibility) {
+      setSegment(index);
+      const hasNext = index < cards.length - 1;
+      const t = hasNext ? smooth(progress) : 0;
+      const out = hasNext ? smooth(t / 0.58) : 0;
+      const incoming = hasNext ? smooth((t - 0.42) / 0.58) : 0;
+      const fromScale = 1 - out * 0.9;
+      const toScale = 0.1 + incoming * 0.9;
+      const dotOpacity = hasNext ? Math.pow(Math.sin(Math.PI * t), 6) : 0;
+
+      fromIcon.style.opacity = String(visibility * (1 - smooth((t - 0.34) / 0.32)));
+      fromIcon.style.transform = "scale(" + fromScale.toFixed(4) + ") rotate(" + (-18 * out).toFixed(2) + "deg)";
+      toIcon.style.opacity = String(visibility * smooth((t - 0.48) / 0.3));
+      toIcon.style.transform = "scale(" + toScale.toFixed(4) + ") rotate(" + (18 * (1 - incoming)).toFixed(2) + "deg)";
+      dot.style.opacity = String(visibility * dotOpacity);
+      dot.style.transform = "translate(-50%, -50%) scale(" + (0.65 + dotOpacity * 0.35).toFixed(3) + ")";
     }
 
     function update() {
       ticking = false;
       const sectionRect = section.getBoundingClientRect();
-      const inSection = sectionRect.top < innerHeight * 0.75 && sectionRect.bottom > innerHeight * 0.25;
-      if (!inSection) return;
-
-      if (!introStarted && sectionRect.top < innerHeight) {
-        introStarted = true;
-        play(intro, true);
+      if (sectionRect.top >= innerHeight || sectionRect.bottom <= 0) {
+        setActive(-1);
+        fromIcon.style.opacity = "0";
+        toIcon.style.opacity = "0";
+        dot.style.opacity = "0";
+        return;
       }
 
       const target = innerHeight * 0.58;
-      let nearest = -1;
-      let distance = Infinity;
-      cards.forEach(function (card, i) {
+      const centers = cards.map(function (card) {
         const rect = card.getBoundingClientRect();
-        const center = rect.top + rect.height / 2;
-        const nextDistance = Math.abs(center - target);
-        if (nextDistance < distance && rect.bottom > innerHeight * 0.18 && rect.top < innerHeight * 0.82) {
-          distance = nextDistance;
-          nearest = i;
-        }
+        return rect.top + rect.height / 2;
       });
-      if (nearest >= 0) activate(nearest);
+      const firstRect = cards[0].getBoundingClientRect();
+      if (target < centers[0]) {
+        const visibility = smooth((innerHeight * 0.84 - firstRect.top) / (innerHeight * 0.24));
+        draw(0, 0, visibility);
+        setActive(visibility > 0.45 ? 0 : -1);
+        return;
+      }
+
+      let index = cards.length - 1;
+      let progress = 0;
+      for (let i = 0; i < centers.length - 1; i++) {
+        if (target <= centers[i + 1]) {
+          index = i;
+          progress = clamp01((target - centers[i]) / (centers[i + 1] - centers[i]));
+          break;
+        }
+      }
+      draw(index, progress, 1);
+      setActive(Math.min(index + (progress >= 0.5 ? 1 : 0), cards.length - 1));
     }
 
     function queueUpdate() {

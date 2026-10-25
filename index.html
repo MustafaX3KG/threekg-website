@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/style.css?v=20261025-2" />
+  <link rel="stylesheet" href="assets/style.css?v=20261025-4" />
 </head>
 <body class="is-loading">
 
@@ -264,9 +264,11 @@
             <h2>Six ways in.</h2>
           </div>
           <div class="services__motion reveal" aria-live="polite">
-            <video class="services__video" muted playsinline preload="auto" aria-hidden="true">
-              <source src="assets/brand/motion/services-intro.mp4" type="video/mp4" />
-            </video>
+            <div class="services__morph" aria-hidden="true">
+              <img class="services__icon services__icon--from" alt="" />
+              <span class="services__morph-dot"></span>
+              <img class="services__icon services__icon--to" alt="" />
+            </div>
             <div class="services__motion-meta mono">
               <span class="services__motion-index">00 / 06</span>
               <span class="services__motion-label">scroll to explore</span>
@@ -274,32 +276,32 @@
           </div>
         </div>
         <ul class="services__list">
-          <li class="svc-card services__card" data-service="brand" data-motion="assets/brand/motion/service-brand.mp4">
+          <li class="svc-card services__card" data-service="brand" data-icon="assets/brand/motion/service-brand.svg">
             <span class="mono services__number">01</span>
             <h3 class="svc-card__name">Brand identity</h3>
             <p class="mono svc-card__hint">naming · systems · guidelines</p>
           </li>
-          <li class="svc-card services__card" data-service="design" data-motion="assets/brand/motion/service-design.mp4">
+          <li class="svc-card services__card" data-service="design" data-icon="assets/brand/motion/service-design.svg">
             <span class="mono services__number">02</span>
             <h3 class="svc-card__name">Web design</h3>
             <p class="mono svc-card__hint">strategy · UX · art direction</p>
           </li>
-          <li class="svc-card services__card" data-service="studio" data-motion="assets/brand/motion/service-studio.mp4">
+          <li class="svc-card services__card" data-service="studio" data-icon="assets/brand/motion/service-studio.svg">
             <span class="mono services__number">03</span>
             <h3 class="svc-card__name">Creative development</h3>
             <p class="mono svc-card__hint">canvas · motion · interaction</p>
           </li>
-          <li class="svc-card services__card" data-service="campaigns" data-motion="assets/brand/motion/service-campaigns.mp4">
+          <li class="svc-card services__card" data-service="campaigns" data-icon="assets/brand/motion/service-campaigns.svg">
             <span class="mono services__number">04</span>
             <h3 class="svc-card__name">Art direction</h3>
             <p class="mono svc-card__hint">campaigns · editorial · image</p>
           </li>
-          <li class="svc-card services__card" data-service="production" data-motion="assets/brand/motion/service-production.mp4">
+          <li class="svc-card services__card" data-service="production" data-icon="assets/brand/motion/service-production.svg">
             <span class="mono services__number">05</span>
             <h3 class="svc-card__name">Production</h3>
             <p class="mono svc-card__hint">film · shoots · content</p>
           </li>
-          <li class="svc-card services__card" data-service="xperience" data-motion="assets/brand/motion/service-xperience.mp4">
+          <li class="svc-card services__card" data-service="xperience" data-icon="assets/brand/motion/service-xperience.svg">
             <span class="mono services__number">06</span>
             <h3 class="svc-card__name">Motion &amp; interaction</h3>
             <p class="mono svc-card__hint">micro-interactions · video</p>
@@ -340,6 +342,6 @@
     </div>
   </footer>
 
-  <script src="assets/script.js?v=20261025-3"></script>
+  <script src="assets/script.js?v=20261025-4"></script>
 </body>
 </html>

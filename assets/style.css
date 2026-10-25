@@ -427,15 +427,33 @@ body::after {
   position: relative;
   width: min(100%, 34rem);
   aspect-ratio: 1;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid var(--line);
+  color: var(--ink);
 }
-.services__video {
-  display: block;
+.services__morph {
+  position: absolute;
+  inset: 5% 5% 11%;
+}
+.services__icon {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  opacity: 0;
+  transform-origin: 50% 50%;
+  will-change: opacity, transform;
+}
+.services__morph-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(0.9rem, 1.8vw, 1.35rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  will-change: opacity, transform;
 }
 .services__motion-meta {
   position: absolute;
