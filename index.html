@@ -11,7 +11,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
-<body>
+<body class="is-loading">
+
+  <!-- ================= BRAND PRELOAD ================= -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <video class="loader__video" id="loaderVideo" src="assets/brand/motion/loader.mp4" autoplay muted playsinline></video>
+    <span class="mono loader__skip">click to skip</span>
+  </div>
 
   <!-- custom cursor -->
   <div class="cursor" aria-hidden="true"></div>
@@ -251,11 +257,36 @@
         <h2>Five ways in.</h2>
       </div>
       <ul class="services__list">
-        <li class="services__row reveal"><span class="mono">01</span><span class="services__name">Brand identity</span><span class="mono services__hint">naming · systems · guidelines</span></li>
-        <li class="services__row reveal"><span class="mono">02</span><span class="services__name">Web design</span><span class="mono services__hint">strategy · UX · art direction</span></li>
-        <li class="services__row reveal"><span class="mono">03</span><span class="services__name">Creative development</span><span class="mono services__hint">canvas · motion · interaction</span></li>
-        <li class="services__row reveal"><span class="mono">04</span><span class="services__name">Art direction</span><span class="mono services__hint">campaigns · editorial · image</span></li>
-        <li class="services__row reveal"><span class="mono">05</span><span class="services__name">Motion &amp; interaction</span><span class="mono services__hint">micro-interactions · video</span></li>
+        <li class="services__row reveal">
+          <span class="services__icon">
+            <video class="services__motion" src="assets/brand/motion/srv-brand.mp4" poster="assets/brand/motion/poster-brand.jpg" muted playsinline preload="metadata">></video>
+          </span>
+          <span class="services__name">Brand identity</span><span class="mono services__hint">naming · systems · guidelines</span>
+        </li>
+        <li class="services__row reveal">
+          <span class="services__icon">
+            <video class="services__motion" src="assets/brand/motion/srv-web.mp4" poster="assets/brand/motion/poster-web.jpg" muted playsinline preload="metadata">></video>
+          </span>
+          <span class="services__name">Web design</span><span class="mono services__hint">strategy · UX · art direction</span>
+        </li>
+        <li class="services__row reveal">
+          <span class="services__icon">
+            <video class="services__motion" src="assets/brand/motion/srv-creative.mp4" poster="assets/brand/motion/poster-creative.jpg" muted playsinline preload="metadata">></video>
+          </span>
+          <span class="services__name">Creative development</span><span class="mono services__hint">canvas · motion · interaction</span>
+        </li>
+        <li class="services__row reveal">
+          <span class="services__icon">
+            <video class="services__motion" src="assets/brand/motion/srv-art.mp4" poster="assets/brand/motion/poster-art.jpg" muted playsinline preload="metadata">></video>
+          </span>
+          <span class="services__name">Art direction</span><span class="mono services__hint">campaigns · editorial · image</span>
+        </li>
+        <li class="services__row reveal">
+          <span class="services__icon">
+            <video class="services__motion" src="assets/brand/motion/srv-motion.mp4" poster="assets/brand/motion/poster-motion.jpg" muted playsinline preload="metadata">></video>
+          </span>
+          <span class="services__name">Motion &amp; interaction</span><span class="mono services__hint">micro-interactions · video</span>
+        </li>
       </ul>
     </section>
 

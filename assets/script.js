@@ -249,6 +249,101 @@
   }
 
   /* ----------------------------------------------------------
+     brand preload overlay — full symbol sequence once per load
+     ---------------------------------------------------------- */
+  (function loaderInit() {
+    const loader = document.getElementById("loader");
+    const video = document.getElementById("loaderVideo");
+    if (!loader) return;
+
+    let done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      loader.classList.add("is-done");
+      document.body.classList.remove("is-loading");
+      try { video.pause(); } catch (e) {}
+      setTimeout(function () { loader.remove(); }, 700);
+    }
+
+    if (reduceMotion) { finish(); return; }
+
+    // 2x pace keeps the brand moment under ~4.5s
+    video.playbackRate = 2;
+    video.play().catch(function () { /* autoplay blocked — waits for 'playing' */ });
+
+    video.addEventListener("playing", function () {
+      loader.classList.add("is-skippable");
+    });
+    video.addEventListener("ended", finish);
+    video.addEventListener("error", finish);
+
+    // click / tap to skip
+    loader.addEventListener("pointerdown", function () { finish(); });
+    window.addEventListener("keydown", function onKey(e) {
+      if (done) { window.removeEventListener("keydown", onKey); return; }
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+        finish();
+        window.removeEventListener("keydown", onKey);
+      }
+    });
+
+    // hard safety cap in case stalling drags on
+    setTimeout(finish, 6000);
+  })();
+
+  /* ----------------------------------------------------------
+     services — dot-to-symbol motion plays when scrolled into view
+     ---------------------------------------------------------- */
+  (function servicesMotion() {
+    const movers = document.querySelectorAll(".services__motion");
+    if (!movers.length) return;
+
+    const firstPlay = new WeakSet();
+    function playOne(v) {
+      if (v.readyState >= 2) {
+        v.currentTime = 0;
+        const p = v.play();
+        if (p && p.catch) p.catch(function () {});
+      } else {
+        v.addEventListener("loadeddata", function once() {
+          v.removeEventListener("loadeddata", once);
+          v.play().catch(function () {});
+        });
+      }
+    }
+
+    function arm(row) {
+      row.addEventListener("mouseenter", function () {
+        const v = row.querySelector(".services__motion");
+        if (v) playOne(v);
+      });
+    }
+
+    if ("IntersectionObserver" in window && !reduceMotion) {
+      const svcIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          const v = entry.target.querySelector(".services__motion");
+          if (v) playOne(v);
+          if (!firstPlay.has(entry.target)) {
+            firstPlay.add(entry.target);
+            arm(entry.target); // replay on hover after the scroll-in reveal
+          }
+          svcIO.unobserve(entry.target);
+        });
+      }, { threshold: 0.45 });
+      movers.forEach(function (v) { svcIO.observe(v.closest(".services__row") || v); });
+    } else {
+      // reduced motion / no IO: hold the finished symbol via poster
+      movers.forEach(function (v) {
+        v.currentTime = v.duration || 0;
+        v.pause();
+      });
+    }
+  })();
+
+  /* ----------------------------------------------------------
      scroll reveals
      ---------------------------------------------------------- */
   const revealEls = document.querySelectorAll(".reveal");
