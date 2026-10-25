@@ -28,9 +28,11 @@
       <span class="mono menu__cap">(navigation)</span>
       <nav class="menu__nav">
         <a href="#top"><span class="mono">01</span> Index</a>
-        <a href="#work"><span class="mono">02</span> Work</a>
-        <a href="#studio"><span class="mono">03</span> Studio</a>
-        <a href="#contact"><span class="mono">04</span> Contact</a>
+        <a href="#showreel"><span class="mono">02</span> Showreel</a>
+        <a href="#work"><span class="mono">03</span> Work</a>
+        <a href="#clients"><span class="mono">04</span> Clients</a>
+        <a href="#studio"><span class="mono">05</span> Studio</a>
+        <a href="#contact"><span class="mono">06</span> Contact</a>
       </nav>
       <div class="menu__foot">
         <a href="mailto:hello@threekg.studio">hello@threekg.studio</a>
@@ -69,7 +71,31 @@
         <div class="hero__foot">
           <span class="mono">scroll to explore ↓</span>
           <span class="mono hide-sm">working worldwide</span>
-          <span class="mono hide-sm">[01/04]</span>
+          <span class="mono hide-sm">[01/07]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SHOWREEL ================= -->
+    <section class="showreel" id="showreel">
+      <div class="showreel__frame reveal" tabindex="0" role="button" aria-label="Showreel — press Enter to play or pause">
+        <video
+          class="showreel__video"
+          id="showreelVideo"
+          src="assets/showreel.mp4"
+          muted
+          loop
+          playsinline
+          preload="metadata"
+        ></video>
+        <div class="showreel__scrim"></div>
+        <div class="showreel__overlay">
+          <span class="mono showreel__cap">[02 — showreel] 2026</span>
+          <button class="showreel__play" id="showreelPlay" aria-label="Play showreel">
+            <span class="showreel__play-icon">▶</span>
+            <span class="mono">play reel</span>
+          </button>
+          <span class="mono showreel__dur hide-sm">0:10 — reel placeholder</span>
         </div>
       </div>
     </section>
@@ -89,9 +115,9 @@
     <!-- ================= WORK ================= -->
     <section class="work" id="work">
       <div class="section-head reveal">
-        <span class="mono">[02 — selected work]</span>
+        <span class="mono">[03 — featured]</span>
         <span class="mono">2019 → 2026</span>
-        <h2>The work<br /><em>speaks first.</em></h2>
+        <h2>Featured<br /><em>work.</em></h2>
       </div>
 
       <ul class="work__list" id="workList">
@@ -151,10 +177,37 @@
       </div>
     </section>
 
+    <!-- ================= CLIENTS ================= -->
+    <section class="clients" id="clients">
+      <div class="section-head reveal">
+        <span class="mono">[04 — clients]</span>
+        <span class="mono">2025</span>
+        <h2>Clients we helped<br /><em>in 2025.</em></h2>
+      </div>
+      <ul class="clients__grid">
+        <li class="clients__tile reveal"><span class="clients__name">Halcyon</span><span class="mono clients__tag">hospitality</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Meridian</span><span class="mono clients__tag">creative studio</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Ferro</span><span class="mono clients__tag">retail</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">North Light</span><span class="mono clients__tag">culture</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Onto &amp; Co.</span><span class="mono clients__tag">editorial</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Vellum</span><span class="mono clients__tag">publishing</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Aster &amp; Pine</span><span class="mono clients__tag">hospitality</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Kernel Water</span><span class="mono clients__tag">consumer</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Dune Society</span><span class="mono clients__tag">apparel</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Arca</span><span class="mono clients__tag">architecture</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Fold Paper</span><span class="mono clients__tag">stationery</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Studio Mantle</span><span class="mono clients__tag">software</span></li>
+      </ul>
+      <div class="work__foot reveal">
+        <span class="mono">(12) placeholder tiles — swap for your real clients</span>
+        <a class="mono" href="mailto:hello@threekg.studio">become a client ↗</a>
+      </div>
+    </section>
+
     <!-- ================= STUDIO ================= -->
     <section class="studio" id="studio">
       <div class="section-head reveal">
-        <span class="mono">[03 — the studio]</span>
+        <span class="mono">[05 — the studio]</span>
         <span class="mono">est. 2021</span>
         <h2>Enough range to win<br /><em>the brief. Small enough</em><br /><em>to care about it.</em></h2>
       </div>
@@ -184,7 +237,7 @@
     <!-- ================= SERVICES ================= -->
     <section class="services" id="services">
       <div class="section-head reveal">
-        <span class="mono">[04 — what we do]</span>
+        <span class="mono">[06 — what we do]</span>
         <span class="mono">capabilities</span>
         <h2>Five ways in.</h2>
       </div>

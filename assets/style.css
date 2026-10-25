@@ -483,6 +483,145 @@ body::after {
 .footer__col a:hover { color: var(--accent); }
 
 /* ============================================================
+   showreel (video after hero)
+   ============================================================ */
+.showreel {
+  padding: clamp(2rem, 4vw, 3rem) var(--pad) 0;
+}
+
+.showreel__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 82vh;
+  overflow: hidden;
+  border-radius: 4px;
+  background: linear-gradient(150deg, #e8d8cf 0%, #8a6f52 45%, #5c6b73 78%, #6f5f8a 100%);
+  /* acts as poster texture while the video loads */
+}
+
+.showreel__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.96);
+}
+
+.showreel__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(16, 16, 16, 0.45), transparent 45%, transparent 75%, rgba(16, 16, 16, 0.2));
+  opacity: 1;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+.showreel__frame.is-playing .showreel__scrim { opacity: 0; }
+
+.showreel__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.2rem, 2.5vw, 2.2rem);
+  color: #f3f2ed;
+}
+.showreel__cap, .showreel__dur { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; mix-blend-mode: difference; }
+
+.showreel__play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 1.6rem;
+  border: 1px solid rgba(243, 242, 237, 0.55);
+  border-radius: 999px;
+  color: #f3f2ed;
+  background: rgba(16, 16, 16, 0.25);
+  backdrop-filter: blur(6px);
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.showreel__play:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translate(-50%, -50%) scale(1.05);
+}
+.showreel__play-icon { font-size: 0.8em; }
+.showreel__frame.is-playing .showreel__play {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+@media (pointer: fine) {
+  .showreel__frame.is-playing:hover .showreel__play {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ============================================================
+   clients grid
+   ============================================================ */
+.clients {
+  padding: clamp(6rem, 12vw, 11rem) var(--pad) 0;
+}
+
+.clients__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--line);
+  margin-bottom: 2rem;
+}
+.clients__tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  padding: clamp(1.2rem, 2.4vw, 2rem);
+  min-height: clamp(7.5rem, 14vw, 11rem);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+.clients__tile:nth-child(4n) { border-right: none; }
+.clients__tile:nth-child(-n+4) { border-top: none; }
+
+.clients__name {
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.clients__tag { color: var(--muted); }
+
+@media (hover: hover) {
+  .clients__tile:hover {
+    background: var(--invert-bg);
+    color: var(--invert-ink);
+  }
+  .clients__tile:hover .clients__tag { color: rgba(243, 242, 237, 0.55); }
+}
+
+@media (max-width: 900px) {
+  .clients__grid { grid-template-columns: repeat(2, 1fr); }
+  .clients__tile:nth-child(4n) { border-right: 1px solid var(--line); }
+  .clients__tile:nth-child(2n) { border-right: none; }
+  .clients__tile:nth-child(-n+2) { border-top: none; }
+  .clients__tile:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .clients__tile:nth-child(n+1):nth-child(-n+2) { border-top: none; }
+}
+
+@media (max-width: 480px) {
+  .showreel__overlay { flex-direction: column; align-items: flex-start; }
+}
+
+/* ============================================================
    reveal animation
    ============================================================ */
 .reveal {
