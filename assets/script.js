@@ -163,15 +163,14 @@
       requestAnimationFrame(cursorLoop);
     })();
 
-    document.querySelectorAll("a, button, .work-card").forEach(function (el) {
+    document.querySelectorAll("a, button, .work-block").forEach(function (el) {
       el.addEventListener("mouseenter", function () { cursor.classList.add("is-hover"); });
       el.addEventListener("mouseleave", function () { cursor.classList.remove("is-hover"); });
     });
   }
 
   /* ----------------------------------------------------------
-     work gallery cards (no floating preview needed —
-     thumbnails live in the masonry grid)
+     featured work — editorial alternating blocks
      ---------------------------------------------------------- */
 
   /* ----------------------------------------------------------
