@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ThreeKG Elementor Sections
  * Description: Editable Elementor sections for the ThreeKG studio website.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: ThreeKG
  */
 
@@ -144,7 +144,7 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
             ?>
             <section class="work" id="work"><div class="section-head reveal"><span class="mono"><?php echo esc_html($s['eyebrow']); ?></span><span class="mono">2019 → <?php echo esc_html(gmdate('Y')); ?></span><div class="work__titlerow"><h2><?php echo esc_html($title[0]); ?><br><em><?php echo esc_html($title[1] ?? 'work.'); ?></em></h2><button type="button" class="symbol-btn work__symbol" data-category="selected-work"><svg viewBox="-145 -145 290 290" aria-hidden="true"></svg></button></div></div><div class="work__editorial">
             <?php if (($s['source'] ?? 'manual') === 'cms') :
-                $q = new WP_Query(array('post_type' => 'project', 'post_status' => 'publish', 'posts_per_page' => (int) $s['count'], 'orderby' => array('menu_order' => 'ASC', 'date' => 'DESC'));
+                $q = new WP_Query(array('post_type' => 'project', 'post_status' => 'publish', 'posts_per_page' => (int) $s['count'], 'orderby' => array('menu_order' => 'ASC', 'date' => 'DESC')));
                 $i = 0;
                 while ($q->have_posts()) : $q->the_post();
                     $id = get_the_ID(); $client = get_post_meta($id, '_3kg_project_client', true) ?: get_the_title(); $image = get_the_post_thumbnail_url($id, 'full') ?: threekg_fallback_image($i); $terms = get_the_terms($id, 'project_sector'); $tag = ($terms && !is_wp_error($terms)) ? $terms[0]->name : get_the_excerpt(); ?>
