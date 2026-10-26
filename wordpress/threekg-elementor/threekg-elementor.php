@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ThreeKG Elementor Sections
  * Description: Editable Elementor sections for the ThreeKG studio website.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: ThreeKG
  */
 
@@ -51,19 +51,30 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
             $this->text_control('line_3', __('Headline line 3', 'threekg-elementor'), 'for brands that whisper');
             $this->text_control('accent', __('Italic accent', 'threekg-elementor'), 'loudly.');
             $this->text_control('email', __('Email', 'threekg-elementor'), 'hello@threekg.com');
+            $this->add_control('loader_video', array(
+                'label' => __('Loader video', 'threekg-elementor'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+                'media_types' => array('video'),
+            ));
+            $this->add_control('background_image', array(
+                'label' => __('Optional hero background image', 'threekg-elementor'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+            ));
             $this->end_controls_section();
         }
         protected function render() {
             $s = $this->get_settings_for_display();
             $theme = get_template_directory_uri();
+            $loader_video = !empty($s['loader_video']['url']) ? $s['loader_video']['url'] : $theme . '/assets/brand/motion/loader.mp4';
+            $hero_style = !empty($s['background_image']['url']) ? 'background-image:url(' . esc_url($s['background_image']['url']) . ');background-size:cover;background-position:center;' : '';
             ?>
-            <div class="loader" id="loader" aria-hidden="true"><video class="loader__video" id="loaderVideo" src="<?php echo esc_url($theme . '/assets/brand/motion/loader.mp4'); ?>" autoplay muted playsinline></video><span class="mono loader__skip">click to skip</span></div>
+            <div class="loader" id="loader" aria-hidden="true"><video class="loader__video" id="loaderVideo" src="<?php echo esc_url($loader_video); ?>" autoplay muted playsinline></video><span class="mono loader__skip">click to skip</span></div>
             <div class="cursor" aria-hidden="true"></div>
             <div class="menu" id="menu" aria-hidden="true"><div class="menu__inner"><span class="mono menu__cap">(navigation)</span><nav class="menu__nav">
               <a href="#top"><span class="mono">01</span> Index</a><a href="#showreel"><span class="mono">02</span> Showreel</a><a href="#work"><span class="mono">03</span> Work</a><a href="#clients"><span class="mono">04</span> Clients</a><a href="#studio"><span class="mono">05</span> Studio</a><a href="#contact"><span class="mono">06</span> Contact</a>
             </nav><div class="menu__foot"><a href="mailto:<?php echo esc_attr($s['email']); ?>"><?php echo esc_html($s['email']); ?></a></div></div></div>
             <header class="site-header"><a class="brand" href="#top"><?php echo esc_html($s['brand']); ?><span class="brand__reg">®</span></a><div class="mono site-header__meta"><span class="avail"><i class="avail__dot"></i><?php echo esc_html($s['availability']); ?></span><span class="hide-sm">minimalism · space · motion</span><span id="clock">--:--:--</span><span id="tz"></span></div><button class="menu-toggle mono" id="menuToggle" aria-controls="menu" aria-expanded="false">menu</button></header>
-            <section class="hero" id="top"><canvas class="hero__canvas" id="field" aria-hidden="true"></canvas><div class="hero__inner"><p class="mono hero__kicker reveal"><?php echo esc_html($s['kicker']); ?></p><h1 class="hero__title"><span class="reveal"><?php echo esc_html($s['line_1']); ?></span><span class="reveal"><?php echo esc_html($s['line_2']); ?></span><span class="reveal hero__title--soft"><?php echo esc_html($s['line_3']); ?><em>&nbsp;<?php echo esc_html($s['accent']); ?></em></span></h1><div class="hero__foot"><span class="mono">scroll to explore ↓</span><span class="mono hide-sm">working worldwide</span><span class="mono hide-sm">[01/07]</span></div></div></section>
+            <section class="hero" id="top" style="<?php echo esc_attr($hero_style); ?>"><canvas class="hero__canvas" id="field" aria-hidden="true"></canvas><div class="hero__inner"><p class="mono hero__kicker reveal"><?php echo esc_html($s['kicker']); ?></p><h1 class="hero__title"><span class="reveal"><?php echo esc_html($s['line_1']); ?></span><span class="reveal"><?php echo esc_html($s['line_2']); ?></span><span class="reveal hero__title--soft"><?php echo esc_html($s['line_3']); ?><em>&nbsp;<?php echo esc_html($s['accent']); ?></em></span></h1><div class="hero__foot"><span class="mono">scroll to explore ↓</span><span class="mono hide-sm">working worldwide</span><span class="mono hide-sm">[01/07]</span></div></div></section>
             <?php
         }
     }
@@ -97,21 +108,55 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
             $this->start_controls_section('content', array('label' => __('Projects section', 'threekg-elementor')));
             $this->text_control('eyebrow', __('Section label', 'threekg-elementor'), '[03 — featured]');
             $this->text_control('title', __('Title', 'threekg-elementor'), 'Featured work.');
-            $this->add_control('count', array('label' => __('Number of projects', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::NUMBER, 'default' => 6, 'min' => 1, 'max' => 12));
+            $this->add_control('source', array(
+                'label' => __('Project source', 'threekg-elementor'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'manual',
+                'options' => array('manual' => __('Edit here in Elementor', 'threekg-elementor'), 'cms' => __('WordPress Projects CMS', 'threekg-elementor')),
+            ));
+            $this->add_control('count', array('label' => __('CMS project count', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::NUMBER, 'default' => 6, 'min' => 1, 'max' => 12, 'condition' => array('source' => 'cms')));
+
+            $repeater = new \Elementor\Repeater();
+            $repeater->add_control('image', array('label' => __('Project image', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::MEDIA));
+            $repeater->add_control('name', array('label' => __('Project name', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'Project name', 'label_block' => true));
+            $repeater->add_control('tag', array('label' => __('Project type', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'brand identity'));
+            $repeater->add_control('link', array('label' => __('Project link', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::URL, 'placeholder' => 'https://'));
+            $repeater->add_control('layout', array('label' => __('Image layout', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::SELECT, 'default' => 'full', 'options' => array('full' => 'Full width', 'right' => 'Right aligned', 'left' => 'Left aligned', 'side' => 'Small side')));
+            $names = array('Halcyon Hotels','Meridian Motion','North Light Archive','Onto & Co.','Studio Ferro','Vellum Editions');
+            $layouts = array('full','right','left','side','full','right');
+            $defaults = array();
+            foreach ($names as $i => $name) {
+                $defaults[] = array('name' => $name, 'tag' => 'project placeholder', 'layout' => $layouts[$i], 'image' => array('url' => threekg_fallback_image($i)));
+            }
+            $this->add_control('manual_projects', array(
+                'label' => __('Projects', 'threekg-elementor'),
+                'type' => \Elementor\Controls_Manager::REPEATER,
+                'fields' => $repeater->get_controls(),
+                'default' => $defaults,
+                'title_field' => '{{{ name }}}',
+                'condition' => array('source' => 'manual'),
+            ));
             $this->end_controls_section();
         }
         protected function render() {
             $s = $this->get_settings_for_display();
             $title = preg_split('/\s+/', trim($s['title']), 2);
-            $q = new WP_Query(array('post_type' => 'project', 'post_status' => 'publish', 'posts_per_page' => (int) $s['count'], 'orderby' => array('menu_order' => 'ASC', 'date' => 'DESC')));
             ?>
             <section class="work" id="work"><div class="section-head reveal"><span class="mono"><?php echo esc_html($s['eyebrow']); ?></span><span class="mono">2019 → <?php echo esc_html(gmdate('Y')); ?></span><div class="work__titlerow"><h2><?php echo esc_html($title[0]); ?><br><em><?php echo esc_html($title[1] ?? 'work.'); ?></em></h2><button type="button" class="symbol-btn work__symbol" data-category="selected-work"><svg viewBox="-145 -145 290 290" aria-hidden="true"></svg></button></div></div><div class="work__editorial">
-            <?php if ($q->have_posts()) : $i = 0; while ($q->have_posts()) : $q->the_post(); $id = get_the_ID(); $client = get_post_meta($id, '_3kg_project_client', true) ?: get_the_title(); $image = get_the_post_thumbnail_url($id, 'full') ?: threekg_fallback_image($i); $terms = get_the_terms($id, 'project_sector'); $tag = ($terms && !is_wp_error($terms)) ? $terms[0]->name : get_the_excerpt(); ?>
-              <a class="work-block <?php echo esc_attr(threekg_archive_columns($i)); ?> reveal" href="<?php the_permalink(); ?>"><span class="work-block__media"><img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($client); ?>"></span><span class="work-block__caption"><span class="work-block__title"><?php echo esc_html($client); ?></span><span class="work-block__tag mono"><?php echo esc_html($tag); ?></span></span></a>
-            <?php $i++; endwhile; wp_reset_postdata(); else : foreach (array('Halcyon Hotels','Meridian Motion','North Light Archive','Onto & Co.','Studio Ferro','Vellum Editions') as $i => $name) : ?>
-              <a class="work-block <?php echo esc_attr(threekg_archive_columns($i)); ?> reveal" href="#"><span class="work-block__media"><img src="<?php echo esc_url(threekg_fallback_image($i)); ?>" alt="<?php echo esc_attr($name); ?>"></span><span class="work-block__caption"><span class="work-block__title"><?php echo esc_html($name); ?></span><span class="work-block__tag mono">project placeholder</span></span></a>
+            <?php if (($s['source'] ?? 'manual') === 'cms') :
+                $q = new WP_Query(array('post_type' => 'project', 'post_status' => 'publish', 'posts_per_page' => (int) $s['count'], 'orderby' => array('menu_order' => 'ASC', 'date' => 'DESC'));
+                $i = 0;
+                while ($q->have_posts()) : $q->the_post();
+                    $id = get_the_ID(); $client = get_post_meta($id, '_3kg_project_client', true) ?: get_the_title(); $image = get_the_post_thumbnail_url($id, 'full') ?: threekg_fallback_image($i); $terms = get_the_terms($id, 'project_sector'); $tag = ($terms && !is_wp_error($terms)) ? $terms[0]->name : get_the_excerpt(); ?>
+                  <a class="work-block <?php echo esc_attr(threekg_archive_columns($i)); ?> reveal" href="<?php the_permalink(); ?>"><span class="work-block__media"><img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($client); ?>"></span><span class="work-block__caption"><span class="work-block__title"><?php echo esc_html($client); ?></span><span class="work-block__tag mono"><?php echo esc_html($tag); ?></span></span></a>
+                <?php $i++; endwhile; wp_reset_postdata();
+            else : foreach (($s['manual_projects'] ?? array()) as $i => $project) :
+                $image = !empty($project['image']['url']) ? $project['image']['url'] : threekg_fallback_image($i);
+                $href = !empty($project['link']['url']) ? $project['link']['url'] : '#';
+                $layout = in_array($project['layout'] ?? '', array('full','right','left','side'), true) ? $project['layout'] : 'full'; ?>
+              <a class="work-block work-block--<?php echo esc_attr($layout); ?> reveal" href="<?php echo esc_url($href); ?>"><span class="work-block__media"><img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($project['name']); ?>"></span><span class="work-block__caption"><span class="work-block__title"><?php echo esc_html($project['name']); ?></span><span class="work-block__tag mono"><?php echo esc_html($project['tag']); ?></span></span></a>
             <?php endforeach; endif; ?>
-            </div><div class="work__foot reveal"><span class="mono">Projects are managed from WordPress → Projects</span><a class="mono" href="<?php echo esc_url(get_post_type_archive_link('project') ?: '#'); ?>">view all projects ↗</a></div></section>
+            </div><div class="work__foot reveal"><span class="mono"><?php echo (($s['source'] ?? 'manual') === 'cms') ? 'Projects are managed from WordPress → Projects' : 'Projects are editable in Elementor'; ?></span><a class="mono" href="<?php echo esc_url(get_post_type_archive_link('project') ?: '#'); ?>">view all projects ↗</a></div></section>
             <?php
         }
     }
@@ -123,6 +168,7 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
             $this->start_controls_section('content', array('label' => __('Clients', 'threekg-elementor')));
             $this->text_control('title', __('Title', 'threekg-elementor'), 'Clients we helped in 2025.');
             $repeater = new \Elementor\Repeater();
+            $repeater->add_control('logo', array('label' => __('Optional logo/image', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::MEDIA));
             $repeater->add_control('name', array('label' => __('Client name', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'Client'));
             $repeater->add_control('tag', array('label' => __('Industry', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'industry'));
             $defaults = array(); foreach (array('Halcyon','Meridian','Ferro','North Light','Onto & Co.','Vellum') as $name) { $defaults[] = array('name' => $name, 'tag' => 'creative partner'); }
@@ -130,7 +176,7 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
             $this->end_controls_section();
         }
         protected function render() { $s = $this->get_settings_for_display(); ?>
-          <section class="clients" id="clients"><div class="section-head reveal"><span class="mono">[04 — clients]</span><span class="mono"><?php echo esc_html(gmdate('Y')); ?></span><h2><?php echo wp_kses_post(nl2br(esc_html($s['title']))); ?></h2></div><ul class="clients__grid"><?php foreach ($s['clients'] as $client) : ?><li class="clients__tile reveal"><span class="clients__name"><?php echo esc_html($client['name']); ?></span><span class="mono clients__tag"><?php echo esc_html($client['tag']); ?></span></li><?php endforeach; ?></ul></section>
+          <section class="clients" id="clients"><div class="section-head reveal"><span class="mono">[04 — clients]</span><span class="mono"><?php echo esc_html(gmdate('Y')); ?></span><h2><?php echo wp_kses_post(nl2br(esc_html($s['title']))); ?></h2></div><ul class="clients__grid"><?php foreach ($s['clients'] as $client) : ?><li class="clients__tile reveal"><?php if (!empty($client['logo']['url'])) : ?><img class="clients__logo" src="<?php echo esc_url($client['logo']['url']); ?>" alt="<?php echo esc_attr($client['name']); ?>"><?php else : ?><span class="clients__name"><?php echo esc_html($client['name']); ?></span><?php endif; ?><span class="mono clients__tag"><?php echo esc_html($client['tag']); ?></span></li><?php endforeach; ?></ul></section>
         <?php }
     }
 
@@ -142,6 +188,7 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
             $this->text_control('title', __('Title', 'threekg-elementor'), 'Enough range to win the brief. Small enough to care about it.', \Elementor\Controls_Manager::TEXTAREA);
             $this->text_control('lead', __('Lead paragraph', 'threekg-elementor'), "ThreeKG is an independent design practice working with founders and cultural brands who'd rather show than explain.", \Elementor\Controls_Manager::TEXTAREA);
             $this->text_control('body', __('Second paragraph', 'threekg-elementor'), 'We take on a handful of projects at a time so the people you brief are the people doing the work.', \Elementor\Controls_Manager::TEXTAREA);
+            $this->add_control('studio_image', array('label' => __('Optional studio image', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::MEDIA));
             $repeater = new \Elementor\Repeater();
             $repeater->add_control('number', array('label' => __('Number', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => '48'));
             $repeater->add_control('label', array('label' => __('Label', 'threekg-elementor'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'projects shipped'));
@@ -149,7 +196,7 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
             $this->end_controls_section();
         }
         protected function render() { $s = $this->get_settings_for_display(); ?>
-          <section class="studio" id="studio"><div class="section-head reveal"><span class="mono">[05 — the studio]</span><span class="mono">est. 2021</span><h2><?php echo esc_html($s['title']); ?></h2></div><div class="studio__grid"><p class="reveal studio__lead"><?php echo esc_html($s['lead']); ?></p><p class="reveal studio__body"><?php echo esc_html($s['body']); ?></p></div><ul class="studio__stats reveal"><?php foreach ($s['stats'] as $stat) : ?><li><span class="mono stat__num"><?php echo esc_html($stat['number']); ?></span><span class="mono stat__cap"><?php echo esc_html($stat['label']); ?></span></li><?php endforeach; ?></ul></section>
+          <section class="studio" id="studio"><div class="section-head reveal"><span class="mono">[05 — the studio]</span><span class="mono">est. 2021</span><h2><?php echo esc_html($s['title']); ?></h2></div><?php if (!empty($s['studio_image']['url'])) : ?><figure class="studio__image reveal"><img src="<?php echo esc_url($s['studio_image']['url']); ?>" alt=""></figure><?php endif; ?><div class="studio__grid"><p class="reveal studio__lead"><?php echo esc_html($s['lead']); ?></p><p class="reveal studio__body"><?php echo esc_html($s['body']); ?></p></div><ul class="studio__stats reveal"><?php foreach ($s['stats'] as $stat) : ?><li><span class="mono stat__num"><?php echo esc_html($stat['number']); ?></span><span class="mono stat__cap"><?php echo esc_html($stat['label']); ?></span></li><?php endforeach; ?></ul></section>
         <?php }
     }
 
