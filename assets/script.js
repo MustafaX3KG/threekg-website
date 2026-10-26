@@ -569,28 +569,167 @@
   })();
 
   /* ----------------------------------------------------------
-     services — transparent SVG symbols scrubbed by scroll
+     services — direct SVG geometry morphs scrubbed by scroll
      ---------------------------------------------------------- */
   (function servicesScrollStory() {
     const section = document.querySelector(".services");
     const cards = Array.prototype.slice.call(document.querySelectorAll(".services__card"));
-    const fromIcon = document.querySelector(".services__icon--from");
-    const toIcon = document.querySelector(".services__icon--to");
-    const dot = document.querySelector(".services__morph-dot");
+    const svg = document.querySelector(".services__morph-svg");
     const indexLabel = document.querySelector(".services__motion-index");
     const nameLabel = document.querySelector(".services__motion-label");
-    if (!section || !cards.length || !fromIcon || !toIcon || !dot) return;
+    if (!section || !cards.length || !svg) return;
 
-    let segment = -1;
+    const NS = "http://www.w3.org/2000/svg";
+    const N = 192;
+    const TAU = Math.PI * 2;
+    const STRANDS = 8;
+    const POINTS = 25;
+    const STROKE = 19;
+    const ROUNDNESS = 0.09;
     let activeIndex = -1;
     let ticking = false;
     const clamp01 = function (x) { return Math.max(0, Math.min(1, x)); };
-    const smooth = function (x) { x = clamp01(x); return x * x * (3 - 2 * x); };
+    const mix = function (a, b, t) { return a + (b - a) * t; };
+    const smooth = function (x) { x = clamp01(x); return x * x * x * (x * (x * 6 - 15) + 10); };
+    const lock = function (x) {
+      x = clamp01(x);
+      return smooth(x) + 0.018 * Math.sin(4 * Math.PI * x) * Math.pow(Math.sin(Math.PI * x), 2);
+    };
 
-    cards.forEach(function (card) {
-      const preload = new Image();
-      preload.src = card.dataset.icon;
+    function rotatePoint(point, degrees) {
+      const angle = degrees * Math.PI / 180;
+      const cosine = Math.cos(angle);
+      const sine = Math.sin(angle);
+      return [point[0] * cosine - point[1] * sine, point[0] * sine + point[1] * cosine];
+    }
+
+    function roundedVertices(vertices) {
+      const points = [];
+      const corners = vertices.map(function (vertex, i) {
+        const previous = vertices[(i + vertices.length - 1) % vertices.length];
+        const next = vertices[(i + 1) % vertices.length];
+        const previousDistance = Math.hypot(vertex[0] - previous[0], vertex[1] - previous[1]);
+        const nextDistance = Math.hypot(vertex[0] - next[0], vertex[1] - next[1]);
+        const trim = ROUNDNESS * 0.42 * Math.min(previousDistance, nextDistance);
+        return {
+          vertex: vertex,
+          enter: [mix(vertex[0], previous[0], trim / previousDistance), mix(vertex[1], previous[1], trim / previousDistance)],
+          exit: [mix(vertex[0], next[0], trim / nextDistance), mix(vertex[1], next[1], trim / nextDistance)]
+        };
+      });
+      corners.forEach(function (corner, i) {
+        for (let j = 0; j < 9; j++) {
+          const t = j / 8;
+          points.push([
+            (1 - t) * (1 - t) * corner.enter[0] + 2 * (1 - t) * t * corner.vertex[0] + t * t * corner.exit[0],
+            (1 - t) * (1 - t) * corner.enter[1] + 2 * (1 - t) * t * corner.vertex[1] + t * t * corner.exit[1]
+          ]);
+        }
+        const nextEnter = corners[(i + 1) % corners.length].enter;
+        for (let j = 1; j < 9; j++) {
+          points.push([mix(corner.exit[0], nextEnter[0], j / 8), mix(corner.exit[1], nextEnter[1], j / 8)]);
+        }
+      });
+      return points;
+    }
+
+    function cross(a, b) { return a[0] * b[1] - a[1] * b[0]; }
+
+    function radial(vertices) {
+      const outline = roundedVertices(vertices);
+      return Array.from({ length: N }, function (_, i) {
+        const angle = -Math.PI / 2 + i * TAU / N;
+        const ray = [Math.cos(angle), Math.sin(angle)];
+        let nearest = Infinity;
+        outline.forEach(function (point, j) {
+          const next = outline[(j + 1) % outline.length];
+          const segment = [next[0] - point[0], next[1] - point[1]];
+          const denominator = cross(ray, segment);
+          if (Math.abs(denominator) < 1e-8) return;
+          const distance = cross(point, segment) / denominator;
+          const position = cross(point, ray) / denominator;
+          if (distance > 0 && position >= -1e-7 && position <= 1 + 1e-7) nearest = Math.min(nearest, distance);
+        });
+        return [ray[0] * nearest, ray[1] * nearest];
+      });
+    }
+
+    function circle(radius) {
+      return Array.from({ length: N }, function (_, i) {
+        const angle = -Math.PI / 2 + i * TAU / N;
+        return [Math.cos(angle) * radius, Math.sin(angle) * radius];
+      });
+    }
+
+    function contourStrands(contour) {
+      return Array.from({ length: STRANDS }, function (_, strand) {
+        return Array.from({ length: POINTS }, function (_, point) {
+          return contour[(strand * 24 + point) % N];
+        });
+      });
+    }
+
+    function armStrands(angles) {
+      return angles.map(function (angle) {
+        const radians = angle * Math.PI / 180;
+        return Array.from({ length: POINTS }, function (_, point) {
+          const radius = 80 * point / (POINTS - 1);
+          return [Math.cos(radians) * radius, Math.sin(radians) * radius];
+        });
+      });
+    }
+
+    const squareContour = radial([[-72, -72], [72, -72], [72, 72], [-72, 72]]);
+    const forms = {
+      brand: contourStrands(circle(76)),
+      design: armStrands([-90, -90, 0, 0, 90, 90, 180, 180]),
+      studio: contourStrands(squareContour.map(function (point) { return rotatePoint(point, 45); })),
+      campaigns: armStrands([-90, -45, 0, 45, 90, 135, 180, 225]),
+      production: contourStrands(radial([[-65, -78], [65, 0], [-65, 78]])),
+      xperience: armStrands([-45, -45, 45, 45, 135, 135, 225, 225])
+    };
+
+    const paths = Array.from({ length: STRANDS }, function () {
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", "currentColor");
+      path.setAttribute("stroke-width", STROKE);
+      path.setAttribute("stroke-linecap", "round");
+      path.setAttribute("stroke-linejoin", "round");
+      svg.append(path);
+      return path;
     });
+
+    function setPath(path, points) {
+      path.setAttribute("d", "M" + points.map(function (point) {
+        return point[0].toFixed(3) + "," + point[1].toFixed(3);
+      }).join("L"));
+    }
+
+    function drawSymbol(key) {
+      forms[key].forEach(function (strand, i) { setPath(paths[i], strand); });
+    }
+
+    function drawTransition(fromKey, toKey, progress) {
+      const source = forms[fromKey];
+      const target = forms[toKey];
+      const q = clamp01(progress);
+      source.forEach(function (strand, i) {
+        const delay = (i % 4) * 0.012;
+        const local = lock((q - delay) / (1 - 0.036));
+        const orbit = Math.sin(Math.PI * local);
+        const rotation = (i % 2 ? 1 : -1) * 8 * orbit;
+        const angle = -Math.PI / 2 + (i + 0.5) * TAU / STRANDS;
+        const offset = 4.5 * orbit;
+        const points = strand.map(function (point, j) {
+          const destination = target[i][j];
+          const blended = [mix(point[0], destination[0], local), mix(point[1], destination[1], local)];
+          const rotated = rotatePoint(blended, rotation);
+          return [rotated[0] + Math.cos(angle) * offset, rotated[1] + Math.sin(angle) * offset];
+        });
+        setPath(paths[i], points);
+      });
+    }
 
     function setActive(index) {
       if (index === activeIndex) return;
@@ -608,29 +747,14 @@
       if (nameLabel) nameLabel.textContent = cards[index].querySelector(".svc-card__name").textContent;
     }
 
-    function setSegment(index) {
-      if (index === segment) return;
-      segment = index;
-      fromIcon.src = cards[index].dataset.icon;
-      toIcon.src = cards[Math.min(index + 1, cards.length - 1)].dataset.icon;
-    }
-
     function draw(index, progress, visibility) {
-      setSegment(index);
-      const hasNext = index < cards.length - 1;
-      const t = hasNext ? smooth(progress) : 0;
-      const out = hasNext ? smooth(t / 0.58) : 0;
-      const incoming = hasNext ? smooth((t - 0.42) / 0.58) : 0;
-      const fromScale = 1 - out * 0.9;
-      const toScale = 0.1 + incoming * 0.9;
-      const dotOpacity = hasNext ? Math.pow(Math.sin(Math.PI * t), 6) : 0;
-
-      fromIcon.style.opacity = String(visibility * (1 - smooth((t - 0.34) / 0.32)));
-      fromIcon.style.transform = "scale(" + fromScale.toFixed(4) + ") rotate(" + (-18 * out).toFixed(2) + "deg)";
-      toIcon.style.opacity = String(visibility * smooth((t - 0.48) / 0.3));
-      toIcon.style.transform = "scale(" + toScale.toFixed(4) + ") rotate(" + (18 * (1 - incoming)).toFixed(2) + "deg)";
-      dot.style.opacity = String(visibility * dotOpacity);
-      dot.style.transform = "translate(-50%, -50%) scale(" + (0.65 + dotOpacity * 0.35).toFixed(3) + ")";
+      const currentKey = cards[index].dataset.service;
+      const next = Math.min(index + 1, cards.length - 1);
+      const nextKey = cards[next].dataset.service;
+      if (next === index) drawSymbol(currentKey);
+      else drawTransition(currentKey, nextKey, reduceMotion ? (progress >= 0.5 ? 1 : 0) : progress);
+      svg.classList.toggle("is-visible", visibility > 0.02);
+      svg.style.opacity = String(visibility);
     }
 
     function update() {
@@ -638,9 +762,8 @@
       const sectionRect = section.getBoundingClientRect();
       if (sectionRect.top >= innerHeight || sectionRect.bottom <= 0) {
         setActive(-1);
-        fromIcon.style.opacity = "0";
-        toIcon.style.opacity = "0";
-        dot.style.opacity = "0";
+        svg.classList.remove("is-visible");
+        svg.style.opacity = "0";
         return;
       }
 
@@ -674,6 +797,7 @@
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(update);
+      setTimeout(function () { if (ticking) update(); }, 80);
     }
 
     window.addEventListener("scroll", queueUpdate, { passive: true });
