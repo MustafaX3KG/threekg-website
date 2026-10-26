@@ -27,10 +27,17 @@ function threekg_revamp_assets() {
 add_action('wp_enqueue_scripts', 'threekg_revamp_assets');
 
 function threekg_revamp_body_classes($classes) {
-    $classes[] = 'is-loading';
+    if (is_front_page()) {
+        $classes[] = 'is-loading';
+    }
     return $classes;
 }
 add_filter('body_class', 'threekg_revamp_body_classes');
+
+function threekg_revamp_elementor_support() {
+    add_theme_support('elementor');
+}
+add_action('after_setup_theme', 'threekg_revamp_elementor_support');
 
 function threekg_revamp_customize($customizer) {
     $customizer->add_section('threekg_contact', array(
