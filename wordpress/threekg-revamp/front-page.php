@@ -1,0 +1,357 @@
+<?php
+$theme_uri = get_template_directory_uri();
+$contact_email = sanitize_email(get_theme_mod('threekg_contact_email', 'hello@threekg.com'));
+get_header();
+?>
+
+  <!-- ================= BRAND PRELOAD ================= -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <video class="loader__video" id="loaderVideo" src="<?php echo esc_url($theme_uri . '/assets/brand/motion/loader.mp4'); ?>" autoplay muted playsinline></video>
+    <span class="mono loader__skip">click to skip</span>
+  </div>
+
+  <!-- custom cursor -->
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- menu overlay -->
+  <div class="menu" id="menu" aria-hidden="true">
+    <div class="menu__inner">
+      <span class="mono menu__cap">(navigation)</span>
+      <nav class="menu__nav">
+        <a href="#top"><span class="mono">01</span> Index</a>
+        <a href="#showreel"><span class="mono">02</span> Showreel</a>
+        <a href="#work"><span class="mono">03</span> Work</a>
+        <a href="#clients"><span class="mono">04</span> Clients</a>
+        <a href="#studio"><span class="mono">05</span> Studio</a>
+        <a href="#contact"><span class="mono">06</span> Contact</a>
+      </nav>
+      <div class="menu__foot">
+        <a href="mailto:<?php echo esc_attr($contact_email); ?>"><?php echo esc_html($contact_email); ?></a>
+        <div class="menu__socials">
+          <a href="#" rel="noopener">Instagram ↗</a>
+          <a href="#" rel="noopener">LinkedIn ↗</a>
+          <a href="#" rel="noopener">Behance ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#top">ThreeKG<span class="brand__reg">®</span></a>
+    <div class="mono site-header__meta">
+      <span class="avail"><i class="avail__dot"></i>Available for projects</span>
+      <span class="hide-sm">minimalism · space · motion</span>
+      <span id="clock">--:--:--</span>
+      <span id="tz"></span>
+    </div>
+    <button class="menu-toggle mono" id="menuToggle" aria-controls="menu" aria-expanded="false">menu</button>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <canvas class="hero__canvas" id="field" aria-hidden="true"></canvas>
+      <div class="hero__inner">
+        <p class="mono hero__kicker reveal">(ThreeKG — independent design studio, est. 2021)</p>
+        <h1 class="hero__title">
+          <span class="reveal">We build quiet,</span>
+          <span class="reveal">confident work</span>
+          <span class="reveal hero__title--soft">for brands that whisper<em>&nbsp;loudly.</em></span>
+        </h1>
+        <div class="hero__foot">
+          <span class="mono">scroll to explore ↓</span>
+          <span class="mono hide-sm">working worldwide</span>
+          <span class="mono hide-sm">[01/07]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SHOWREEL ================= -->
+    <section class="showreel" id="showreel">
+      <div class="showreel__frame reveal" tabindex="0" role="button" aria-label="Showreel — press Enter to play or pause">
+        <video
+          class="showreel__video"
+          id="showreelVideo"
+          src="<?php echo esc_url($theme_uri . '/assets/showreel.mp4'); ?>"
+          muted
+          loop
+          playsinline
+          preload="metadata"
+        ></video>
+        <div class="showreel__scrim"></div>
+        <div class="showreel__overlay">
+          <span class="mono showreel__cap">[02 — showreel] 2026</span>
+          <button class="showreel__play" id="showreelPlay" aria-label="Play showreel">
+            <span class="showreel__play-icon">▶</span>
+            <span class="mono">play reel</span>
+          </button>
+          <span class="mono showreel__dur hide-sm">0:10 — reel placeholder</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MARQUEE ================= -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span class="marquee__set">
+          <span>Brand Identity</span><i>✳</i><span>Web Design</span><i>✳</i><span>Creative Development</span><i>✳</i><span>Art Direction</span><i>✳</i><span>Motion</span><i>✳</i>
+        </span>
+        <span class="marquee__set">
+          <span>Brand Identity</span><i>✳</i><span>Web Design</span><i>✳</i><span>Creative Development</span><i>✳</i><span>Art Direction</span><i>✳</i><span>Motion</span><i>✳</i>
+        </span>
+      </div>
+    </section>
+
+    <!-- ================= WORK ================= -->
+    <section class="work" id="work">
+      <div class="section-head reveal">
+        <span class="mono">[03 — featured]</span>
+        <span class="mono">2019 → 2026</span>
+        <div class="work__titlerow">
+          <h2>Featured<br /><em>work.</em></h2>
+          <button type="button" class="symbol-btn work__symbol" data-category="selected-work" aria-label="Selected work — preview symbol motion" aria-pressed="false">
+            <svg viewBox="-145 -145 290 290" aria-hidden="true"></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="work__editorial">
+        <?php
+        $featured_projects = new WP_Query(array(
+          'post_type' => 'project',
+          'post_status' => 'publish',
+          'posts_per_page' => 6,
+          'meta_key' => '_3kg_project_featured',
+          'orderby' => array('meta_value_num' => 'DESC', 'menu_order' => 'ASC', 'date' => 'DESC'),
+        ));
+        if ($featured_projects->have_posts()) :
+          $project_index = 0;
+          while ($featured_projects->have_posts()) : $featured_projects->the_post();
+            $project_id = get_the_ID();
+            $project_client = threekg_project_meta($project_id, '_3kg_project_client', get_the_title());
+            $project_image = get_the_post_thumbnail_url($project_id, 'full') ?: threekg_fallback_image($project_index);
+            $project_terms = get_the_terms($project_id, 'project_sector');
+            $project_tag = ($project_terms && !is_wp_error($project_terms)) ? $project_terms[0]->name : get_the_excerpt();
+        ?>
+          <a class="work-block <?php echo esc_attr(threekg_archive_columns($project_index)); ?> reveal" href="<?php the_permalink(); ?>">
+            <span class="work-block__media"><img src="<?php echo esc_url($project_image); ?>" alt="<?php echo esc_attr($project_client); ?>"></span>
+            <span class="work-block__caption"><span class="work-block__title"><?php echo esc_html($project_client); ?></span><span class="work-block__tag mono"><?php echo esc_html($project_tag); ?></span></span>
+          </a>
+        <?php $project_index++; endwhile; wp_reset_postdata(); else : ?>
+        <a class="work-block work-block--full reveal" href="#">
+          <span class="work-block__media">
+            <img src="<?php echo esc_url($theme_uri . '/assets/work/halcyon.jpg'); ?>" alt="Halcyon Hotels — brand identity, placeholder artwork" />
+          </span>
+          <span class="work-block__caption">
+            <span class="work-block__title">Halcyon Hotels</span>
+            <span class="work-block__tag mono">brand identity</span>
+          </span>
+        </a>
+
+        <a class="work-block work-block--right reveal" href="#">
+          <span class="work-block__media">
+            <img src="<?php echo esc_url($theme_uri . '/assets/work/meridian.jpg'); ?>" alt="Meridian Motion — website, placeholder artwork" />
+          </span>
+          <span class="work-block__caption">
+            <span class="work-block__title">Meridian Motion</span>
+            <span class="work-block__tag mono">website</span>
+          </span>
+        </a>
+
+        <div class="work-pair">
+          <a class="work-block work-block--left reveal" href="#">
+            <span class="work-block__media">
+              <img src="<?php echo esc_url($theme_uri . '/assets/work/northlight.jpg'); ?>" alt="North Light Archive — art direction, placeholder artwork" />
+            </span>
+            <span class="work-block__caption">
+              <span class="work-block__title">North Light Archive</span>
+              <span class="work-block__tag mono">art direction</span>
+            </span>
+          </a>
+          <a class="work-block work-block--side reveal" href="#">
+            <span class="work-block__media">
+              <img src="<?php echo esc_url($theme_uri . '/assets/work/onto.jpg'); ?>" alt="Onto and Co. — identity system, placeholder artwork" />
+            </span>
+            <span class="work-block__caption">
+              <span class="work-block__title">Onto &amp; Co.</span>
+              <span class="work-block__tag mono">identity system</span>
+            </span>
+          </a>
+        </div>
+
+        <a class="work-block work-block--full reveal" href="#">
+          <span class="work-block__media">
+            <img src="<?php echo esc_url($theme_uri . '/assets/work/ferro.jpg'); ?>" alt="Studio Ferro — e-commerce, placeholder artwork" />
+          </span>
+          <span class="work-block__caption">
+            <span class="work-block__title">Studio Ferro</span>
+            <span class="work-block__tag mono">e-commerce</span>
+          </span>
+        </a>
+
+        <a class="work-block work-block--right reveal" href="#">
+          <span class="work-block__media">
+            <img src="<?php echo esc_url($theme_uri . '/assets/work/vellum.jpg'); ?>" alt="Vellum Editions — website, placeholder artwork" />
+          </span>
+          <span class="work-block__caption">
+            <span class="work-block__title">Vellum Editions</span>
+            <span class="work-block__tag mono">website</span>
+          </span>
+        </a>
+        <?php endif; ?>
+      </div>
+
+      <div class="work__foot reveal">
+        <span class="mono">(06) featured projects</span>
+        <a class="mono" href="<?php echo esc_url(get_post_type_archive_link('project') ?: 'mailto:' . $contact_email); ?>">view all projects ↗</a>
+      </div>
+    </section>
+
+    <!-- ================= CLIENTS ================= -->
+    <section class="clients" id="clients">
+      <div class="section-head reveal">
+        <span class="mono">[04 — clients]</span>
+        <span class="mono">2025</span>
+        <h2>Clients we helped<br /><em>in 2025.</em></h2>
+      </div>
+      <ul class="clients__grid">
+        <li class="clients__tile reveal"><span class="clients__name">Halcyon</span><span class="mono clients__tag">hospitality</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Meridian</span><span class="mono clients__tag">creative studio</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Ferro</span><span class="mono clients__tag">retail</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">North Light</span><span class="mono clients__tag">culture</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Onto &amp; Co.</span><span class="mono clients__tag">editorial</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Vellum</span><span class="mono clients__tag">publishing</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Aster &amp; Pine</span><span class="mono clients__tag">hospitality</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Kernel Water</span><span class="mono clients__tag">consumer</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Dune Society</span><span class="mono clients__tag">apparel</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Arca</span><span class="mono clients__tag">architecture</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Fold Paper</span><span class="mono clients__tag">stationery</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Studio Mantle</span><span class="mono clients__tag">software</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Beacon Foods</span><span class="mono clients__tag">food &amp; drink</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Marlowe Press</span><span class="mono clients__tag">independent press</span></li>
+        <li class="clients__tile reveal"><span class="clients__name">Summit Labs</span><span class="mono clients__tag">technology</span></li>
+      </ul>
+      <div class="work__foot reveal">
+        <span class="mono">(15) placeholder tiles — swap for your real clients</span>
+        <a class="mono" href="mailto:<?php echo esc_attr($contact_email); ?>">become a client ↗</a>
+      </div>
+    </section>
+
+    <!-- ================= STUDIO ================= -->
+    <section class="studio" id="studio">
+      <div class="section-head reveal">
+        <span class="mono">[05 — the studio]</span>
+        <span class="mono">est. 2021</span>
+        <h2>Enough range to win<br /><em>the brief. Small enough</em><br /><em>to care about it.</em></h2>
+      </div>
+      <div class="studio__grid">
+        <p class="reveal studio__lead">
+          ThreeKG is an independent design practice working with founders and
+          cultural brands who'd rather show than explain. We design identities,
+          websites and the small details in between — with a taste for the quiet
+          confidence that makes work memorable.
+        </p>
+        <p class="reveal studio__body">
+          We take on a handful of projects at a time so the people you brief
+          are the people doing the work. Every project starts with listening,
+          ends with launch, and hopefully starts a conversation that lasts
+          longer than the invoices.
+        </p>
+      </div>
+
+      <ul class="studio__stats reveal">
+        <li><span class="mono stat__num">48</span><span class="mono stat__cap">projects shipped</span></li>
+        <li><span class="mono stat__num">30</span><span class="mono stat__cap">clients worldwide</span></li>
+        <li><span class="mono stat__num">11</span><span class="mono stat__cap">industry awards</span></li>
+        <li><span class="mono stat__num">05</span><span class="mono stat__cap">years in practice</span></li>
+      </ul>
+    </section>
+
+    <!-- ================= SERVICES ================= -->
+    <section class="services" id="services">
+      <div class="services__inner">
+        <div class="services__stage">
+          <div class="section-head reveal">
+            <span class="mono">[06 — what we do]</span>
+            <span class="mono">capabilities</span>
+            <h2>Six ways in.</h2>
+          </div>
+          <div class="services__motion reveal" aria-live="polite">
+            <div class="services__morph" aria-hidden="true">
+              <svg class="services__morph-svg" viewBox="-120 -120 240 240" role="presentation"></svg>
+            </div>
+            <div class="services__motion-meta mono">
+              <span class="services__motion-index">00 / 06</span>
+              <span class="services__motion-label">scroll to explore</span>
+            </div>
+          </div>
+        </div>
+        <ul class="services__list">
+          <li class="svc-card services__card" data-service="brand">
+            <span class="mono services__number">01</span>
+            <h3 class="svc-card__name">Brand identity</h3>
+            <p class="mono svc-card__hint">naming · systems · guidelines</p>
+          </li>
+          <li class="svc-card services__card" data-service="design">
+            <span class="mono services__number">02</span>
+            <h3 class="svc-card__name">Web design</h3>
+            <p class="mono svc-card__hint">strategy · UX · art direction</p>
+          </li>
+          <li class="svc-card services__card" data-service="studio">
+            <span class="mono services__number">03</span>
+            <h3 class="svc-card__name">Creative development</h3>
+            <p class="mono svc-card__hint">canvas · motion · interaction</p>
+          </li>
+          <li class="svc-card services__card" data-service="campaigns">
+            <span class="mono services__number">04</span>
+            <h3 class="svc-card__name">Art direction</h3>
+            <p class="mono svc-card__hint">campaigns · editorial · image</p>
+          </li>
+          <li class="svc-card services__card" data-service="production">
+            <span class="mono services__number">05</span>
+            <h3 class="svc-card__name">Production</h3>
+            <p class="mono svc-card__hint">film · shoots · content</p>
+          </li>
+          <li class="svc-card services__card" data-service="xperience">
+            <span class="mono services__number">06</span>
+            <h3 class="svc-card__name">Motion &amp; interaction</h3>
+            <p class="mono svc-card__hint">micro-interactions · video</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER / CONTACT ================= -->
+  <footer class="footer" id="contact">
+    <span class="mono footer__cap reveal">(get in touch)</span>
+    <a class="footer__cta reveal" href="mailto:<?php echo esc_attr($contact_email); ?>">
+      Start a project
+      <span class="footer__arrow">→</span>
+    </a>
+    <div class="footer__grid">
+      <div class="mono footer__col">
+        <span class="footer__label">studio</span>
+        <span>ThreeKG®</span>
+        <span>working worldwide</span>
+        <span id="clockFooter">--:--:--</span>
+      </div>
+      <div class="mono footer__col">
+        <span class="footer__label">contact</span>
+        <a href="mailto:<?php echo esc_attr($contact_email); ?>"><?php echo esc_html($contact_email); ?></a>
+        <a href="#" rel="noopener">Instagram ↗</a>
+        <a href="#" rel="noopener">LinkedIn ↗</a>
+        <a href="#" rel="noopener">Behance ↗</a>
+      </div>
+      <div class="mono footer__col">
+        <span class="footer__label">site</span>
+        <a href="#top">back to top ↑</a>
+        <span>© 2021–2026 ThreeKG</span>
+        <span>made with quiet intent</span>
+      </div>
+    </div>
+  </footer>
+
+<?php get_footer(); ?>
