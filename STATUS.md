@@ -180,6 +180,10 @@ The user confirmed the rebuilt theme is uploaded and working and authorized the 
 
 Builder must now implement Phase 3 only from the updated `PLAN.md`: package `wp-plugins/threekg-core`, register all eight `threekg/*` section blocks with `block.json`, provide the ThreeKG Landing Page pattern and global settings, migrate the front page to saved-block-or-canonical-fallback rendering, and verify that ACF inactivity cannot break the public site. Do not begin Project/Job CPT, archive, project-detail, career, migration, or production-hardening work in this phase.
 
+### 2026-10-28 — ThreeKG Core ZIP portability correction
+
+The first `build/threekg-core.zip` used incomplete Windows ZIP directory metadata and Local WordPress failed at `Could not copy file. threekg-core\blocks\`. The archive was rebuilt with `git archive`, producing standard Unix-style directory modes and forward-slash paths for the plugin root, assets, blocks and each block subdirectory, inc, and templates. `python -m zipfile -t build/threekg-core.zip` now reports `Done testing`, and `tar -tvf` confirms normal directory/file permissions. Use only the rebuilt archive from commit following this note.
+
 ### 2026-10-28 — Builder reconciliation: native `threekg` theme rebuilt and verified
 
 Builder updates in response to the review above. The complete native theme now exists at
