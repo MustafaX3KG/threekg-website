@@ -1,11 +1,13 @@
 <?php
+/** @var array $values — assigned by the renderer (Elementor) or omitted (ACF blocks). */
+$values   = isset( $values ) && is_array( $values ) ? $values : array();
 $id      = threekg_core_instance_id( $block, 'showreel' );
-$video   = threekg_core_media_url( threekg_core_field( 'video', 0 ), threekg_core_theme_asset( 'assets/showreel.mp4' ) );
-$poster  = threekg_core_media_url( threekg_core_field( 'poster', 0 ) );
-$year    = threekg_core_field( 'year', gmdate( 'Y' ) );
-$duration= threekg_core_field( 'duration', '0:10' );
-$caption = threekg_core_field( 'caption', 'reel placeholder' );
-$play    = threekg_core_field( 'play_label', 'play reel' );
+$video   = threekg_core_media_url( threekg_core_value( $values, 'video', threekg_core_field( 'video', 0 ) ), threekg_core_theme_asset( 'assets/showreel.mp4' ) );
+$poster  = threekg_core_media_url( threekg_core_value( $values, 'poster', threekg_core_field( 'poster', 0 ) ) );
+$year    = threekg_core_value( $values, 'year', threekg_core_field( 'year', gmdate( 'Y' ) ) );
+$duration= threekg_core_value( $values, 'duration', threekg_core_field( 'duration', '0:10' ) );
+$caption = threekg_core_value( $values, 'caption', threekg_core_field( 'caption', 'reel placeholder' ) );
+$play    = threekg_core_value( $values, 'play_label', threekg_core_field( 'play_label', 'play reel' ) );
 ?>
 <section class="showreel" data-threekg-showreel="<?php echo esc_attr( $id ); ?>">
   <div class="showreel__frame reveal">

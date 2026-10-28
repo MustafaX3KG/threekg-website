@@ -1,7 +1,9 @@
 <?php
+/** @var array $values — assigned by the renderer (Elementor) or omitted (ACF blocks). */
+$values   = isset( $values ) && is_array( $values ) ? $values : array();
 $id = threekg_core_instance_id( $block, 'services' );
-$heading = threekg_core_field( 'heading', 'Six ways in.' );
-$services = threekg_core_field( 'services', array() );
+$heading = threekg_core_value( $values, 'heading', threekg_core_field( 'heading', 'Six ways in.' ) );
+$services = threekg_core_value( $values, 'services', threekg_core_field( 'services', array() ) );
 if ( ! is_array( $services ) || 6 !== count( $services ) ) {
 	$rows = array( array( 'Brand identity', 'naming · systems · guidelines', 'brand' ), array( 'Web design', 'strategy · UX · art direction', 'design' ), array( 'Creative development', 'canvas · motion · interaction', 'studio' ), array( 'Art direction', 'campaigns · editorial · image', 'campaigns' ), array( 'Production', 'film · shoots · content', 'production' ), array( 'Motion & interaction', 'micro-interactions · video', 'xperience' ) );
 	$services = array_map( static function ( $row ) { return array( 'name' => $row[0], 'hint' => $row[1], 'symbol_key' => $row[2] ); }, $rows );

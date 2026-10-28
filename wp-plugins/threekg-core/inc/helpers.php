@@ -13,6 +13,26 @@ function threekg_core_field( string $name, $default = '' ) {
 	return null === $value || false === $value || '' === $value ? $default : $value;
 }
 
+/**
+ * Value lookup for template variables (works for both editors).
+ *
+ * Used by inc/elementor.php's renderer: Elementor supplies `$values`,
+ * native ACF blocks supply the same shape via threekg_core_field().
+ *
+ * @param array  $values  Template values keyed by control name.
+ * @param string $key     Control name.
+ * @param mixed  $default Canonical fallback.
+ * @return mixed
+ */
+function threekg_core_value( array $values, string $key, $default = '' ) {
+	$value = $values[ $key ] ?? null;
+	if ( is_array( $value ) ) {
+		$flat = array_filter( $value, 'is_scalar' );
+		return $flat ? $flat : $default;
+	}
+	return ( is_scalar( $value ) && '' !== $value ) ? $value : $default;
+}
+
 function threekg_core_option( string $name, $default = '' ) {
 	if ( function_exists( 'get_field' ) ) {
 		$value = get_field( $name, 'option' );
@@ -25,13 +45,23 @@ function threekg_core_option( string $name, $default = '' ) {
 }
 
 function threekg_core_media_url( $attachment, string $fallback = '' ): string {
-	$id = is_array( $attachment ) ? (int) ( $attachment['ID'] ?? 0 ) : (int) $attachment;
+	$id = 0;
+	if ( is_array( $attachment ) ) {
+		$id = (int) ( $attachment['ID'] ?? $attachment['id'] ?? 0 );
+	} else {
+		$id = (int) $attachment;
+	}
 	$url = $id ? wp_get_attachment_url( $id ) : '';
 	return $url ? (string) $url : $fallback;
 }
 
 function threekg_core_image( $attachment, string $class, string $fallback = '', string $fallback_alt = '' ): string {
-	$id = is_array( $attachment ) ? (int) ( $attachment['ID'] ?? 0 ) : (int) $attachment;
+	$id = 0;
+	if ( is_array( $attachment ) ) {
+		$id = (int) ( $attachment['ID'] ?? $attachment['id'] ?? 0 );
+	} else {
+		$id = (int) $attachment;
+	}
 	if ( $id ) {
 		return (string) wp_get_attachment_image( $id, 'full', false, array( 'class' => $class ) );
 	}

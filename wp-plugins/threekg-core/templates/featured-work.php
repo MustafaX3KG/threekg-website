@@ -1,8 +1,10 @@
 <?php
-$heading = threekg_core_field( 'heading', 'Featured work.' );
-$eyebrow = threekg_core_field( 'eyebrow', '[03 — featured]' );
-$years   = threekg_core_field( 'year_range', '2019 → ' . gmdate( 'Y' ) );
-$cards   = threekg_core_field( 'cards', array() );
+/** @var array $values — assigned by the renderer (Elementor) or omitted (ACF blocks). */
+$values  = isset( $values ) && is_array( $values ) ? $values : array();
+$heading = threekg_core_value( $values, 'heading', threekg_core_field( 'heading', 'Featured work.' ) );
+$eyebrow = threekg_core_value( $values, 'eyebrow', threekg_core_field( 'eyebrow', '[03 — featured]' ) );
+$years   = threekg_core_value( $values, 'year_range', threekg_core_field( 'year_range', '2019 → ' . gmdate( 'Y' ) ) );
+$cards   = threekg_core_value( $values, 'cards', threekg_core_field( 'cards', array() ) );
 if ( ! is_array( $cards ) || ! $cards ) {
 	$names = array( array( 'Halcyon Hotels', 'brand identity', 'halcyon.jpg', 'full' ), array( 'Meridian Motion', 'website', 'meridian.jpg', 'right' ), array( 'North Light Archive', 'art direction', 'northlight.jpg', 'left' ), array( 'Onto & Co.', 'identity system', 'onto.jpg', 'side' ), array( 'Studio Ferro', 'e-commerce', 'ferro.jpg', 'full' ), array( 'Vellum Editions', 'website', 'vellum.jpg', 'right' ) );
 	$cards = array_map( static function ( $row ) { return array( 'title' => $row[0], 'tag' => $row[1], 'fallback' => $row[2], 'layout' => $row[3] ); }, $names );

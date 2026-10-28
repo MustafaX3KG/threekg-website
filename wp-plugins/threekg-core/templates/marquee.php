@@ -1,5 +1,7 @@
 <?php
-$items = threekg_core_field( 'items', array() );
+/** @var array $values — assigned by the renderer (Elementor) or omitted (ACF blocks). */
+$values = isset( $values ) && is_array( $values ) ? $values : array();
+$items = threekg_core_value( $values, 'items', threekg_core_field( 'items', array() ) );
 if ( ! is_array( $items ) || count( $items ) < 2 ) {
 	$items = array( array( 'text' => 'Brand Identity' ), array( 'text' => 'Web Design' ), array( 'text' => 'Creative Development' ), array( 'text' => 'Art Direction' ), array( 'text' => 'Motion' ) );
 }

@@ -1,13 +1,15 @@
 <?php
+/** @var array $values — assigned by the renderer (Elementor) or omitted (ACF blocks). */
+$values     = isset( $values ) && is_array( $values ) ? $values : array();
 $id       = threekg_core_instance_id( $block, 'hero' );
-$kicker   = threekg_core_field( 'kicker', 'ThreeKG — independent design studio, est. 2021' );
-$line1    = threekg_core_field( 'line_1', 'We build quiet,' );
-$line2    = threekg_core_field( 'line_2', 'confident work' );
-$line3    = threekg_core_field( 'line_3', 'for brands that whisper' );
-$accent   = threekg_core_field( 'accent', 'loudly.' );
-$scroll   = threekg_core_field( 'scroll_label', 'scroll to explore ↓' );
-$location = threekg_core_field( 'location_label', threekg_core_option( 'location', 'working worldwide' ) );
-$bg       = threekg_core_media_url( threekg_core_field( 'background_image', 0 ) );
+$kicker   = threekg_core_value( $values, 'kicker', threekg_core_field( 'kicker', 'ThreeKG — independent design studio, est. 2021' ) );
+$line1    = threekg_core_value( $values, 'line_1', threekg_core_field( 'line_1', 'We build quiet,' ) );
+$line2    = threekg_core_value( $values, 'line_2', threekg_core_field( 'line_2', 'confident work' ) );
+$line3    = threekg_core_value( $values, 'line_3', threekg_core_field( 'line_3', 'for brands that whisper' ) );
+$accent   = threekg_core_value( $values, 'accent', threekg_core_field( 'accent', 'loudly.' ) );
+$scroll   = threekg_core_value( $values, 'scroll_label', threekg_core_field( 'scroll_label', 'scroll to explore ↓' ) );
+$location = threekg_core_value( $values, 'location_label', threekg_core_field( 'location_label', threekg_core_option( 'location', 'working worldwide' ) ) );
+$bg       = threekg_core_media_url( threekg_core_value( $values, 'background_image', 0 ) );
 ?>
 <section class="hero" data-threekg-hero="<?php echo esc_attr( $id ); ?>"<?php echo $bg ? ' style="background-image:url(' . esc_url( $bg ) . ')"' : ''; ?>>
   <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
