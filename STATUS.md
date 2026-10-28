@@ -291,3 +291,45 @@ Implemented only the authorized Phase 3 scope at commit base `4c9c39e`. No Proje
 8. Temporarily deactivate ThreeKG Core: confirm the canonical front end remains intact. Reactivate it afterward.
 9. Repeat at a subdirectory URL and inspect Network/Console for zero failed local assets and zero exceptions. Test two Hero, Showreel, or Services blocks on a non-production page to confirm instance isolation.
 10. Check desktop/tablet/mobile and reduced-motion mode, especially Hero canvas, showreel control, services morph, Contact CTA/footer continuity, and loader enabled/disabled behavior.
+
+### 2026-10-28 — ThreeKG Core 2.0.0 — Elementor editing layer added
+
+User decision: page/section editing switches from ACF Pro to **Elementor**. ThreeKG Core now ships both layers:
+
+**What changed**
+
+- New `inc/elementor.php` defines a `ThreeKG_Widget_Base` plus eight Elementor widgets, registered in a `ThreeKG` category in the block/widgets inserter:
+  - `threekg-hero` (kicker, 3 headline lines, accent word, scroll hint, location label, background image)
+  - `threekg-showreel` (video, poster, year, duration, caption, play label)
+  - `threekg-marquee` (repeater: item text)
+  - `threekg-featured-work` (repeater: title, tag, layout select full/right/left/side, link, image, alt)
+  - `threekg-clients` (repeater: name, sector, logo, logo alt)
+  - `threekg-studio` (heading, lead, body, image, stats repeater)
+  - `threekg-services-story` (repeater: name, hint, `symbol_key` select bound to the six stable SVG keys)
+  - `threekg-contact-cta` (override-global switcher, eyebrow, CTA text, link, columns repeater)
+- Widgets render via the same `templates/*.php` markup used by ACF blocks — pixel-parity is untouched: drag-and-drop replaces how sections assemble, not what they render.
+- Elementor values are run through `threekg_core_value()` (scalar checks + canonical defaults), so **missing/empty widget settings never blank a section** — they fall back to the canonical copy in templates/.
+- Front-end assets: `threekg-main` CSS/JS and the animation bundles enqueue via `elementor/frontend/*` whenever Elementor renders ThreeKG sections; already-safe null guards keep inner Elementor pages stable.
+- Admin dependency notice refreshed to list both Elementor (drag-and-drop) and ACF Pro (global settings page) as optional per-scope needs with no public breakage when either is absent.
+
+**Editor matrix**
+
+| Layer | Where it lives | How to use |
+|---|---|---|
+| Elementor widgets | `ThreeKG` category in the Elementor editor | Page → Edit with Elementor → insert from `ThreeKG` category |
+| ACF native blocks | `ThreeKG` native blocks + block pattern | Still available via the block editor with ACF Pro |
+| Global settings | Theme Customizer → ThreeKG panel | When ACF Pro absent; ACF options page when available |
+
+**Editor repeaters → template mapping**
+
+Repeater rows mirror native ACF fields (`cards`, `clients`, `stats`, `items`, `services`) — swap editors on the same page without redesigning content structure.
+
+**Test steps after install**
+
+1. Install/activate Elementor (Free). ThreeKG Core 2.0.0 does not need re-upload if you already run the previous ZIP — upload this new ZIP over the old activation or update via plugin installation update.
+2. Edit the homepage with Elementor → open the Inserter → ThreeKG category → drag in `ThreeKG Hero`, `ThreeKG Showreel`, `ThreeKG Marquee`, `ThreeKG Featured Work`, `ThreeKG Clients`, `ThreeKG Studio`, `ThreeKG Services Story`, `ThreeKG Contact CTA`.
+3. Click a widget → Side panel → edit any label or repeater row → Confirm broadcast to the front page.
+4. Settings → Reading → A static page → pick the Elementor homepage, verify same visually on desktop and mobile.
+5. reCheck DevTools: zero 404s on any template, single Google Fonts request.
+
+**Lint evidence**: all 14 PHP files under `/wp-plugins/threekg-core/` pass `tools/php/php.exe -l` (`No syntax errors` each).
