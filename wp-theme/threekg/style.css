@@ -1,0 +1,19 @@
+/*
+Theme Name: ThreeKG
+Theme URI: https://threekg.studio
+Author: ThreeKG
+Author URI: https://threekg.studio
+Description: Native WordPress port of the ThreeKG studio site - one-page design studio with canvas hero, showreel, editorial work grid, clients grid, studio copy and the dot-to-symbol services sequence. No Elementor required.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.8
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: threekg
+Tags: one-column, custom-logo, custom-menu, featured-images
+*/
+
+/*
+All styles live in assets/css/main.css and are enqueued from inc/enqueue.php.
+*/

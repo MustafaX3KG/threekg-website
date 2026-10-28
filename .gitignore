@@ -6,3 +6,6 @@ server.js
 # Local WordPress packaging output and animation handoff sources.
 build/
 wordpress/threekg-revamp/assets/brand/3KG_Symbol_Motion_Exports_v1/
+
+# ignore only the generated HTML harness output
+harness/render/*.html

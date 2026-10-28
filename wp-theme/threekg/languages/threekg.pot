@@ -1,0 +1,224 @@
+# Copyright (C) 2021-2026 ThreeKG
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: ThreeKG 1.0.0\n"
+"Report-Msgid-Bugs-To: https://threekg.studio\n"
+"POT-Creation-Date: 2026-10-28T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-28T00:00:00+00:00\n"
+"X-Generator: threekg build harness\n"
+"X-Domain: threekg\n"
+
+#: inc/setup.php:34
+msgid "Primary (overlay menu)"
+msgstr ""
+
+#: inc/setup.php:35
+msgid "Footer (site column)"
+msgstr ""
+
+#: inc/setup.php:36
+msgid "Social links (menu cents)"
+msgstr ""
+
+#: inc/setup.php:59
+msgid "Index"
+msgstr ""
+
+#: inc/setup.php:60
+msgid "Showreel"
+msgstr ""
+
+#: inc/setup.php:61
+msgid "Work"
+msgstr ""
+
+#: inc/setup.php:62
+msgid "Clients"
+msgstr ""
+
+#: inc/setup.php:63
+msgid "Studio"
+msgstr ""
+
+#: inc/setup.php:64
+msgid "Contact"
+msgstr ""
+
+#: inc/setup.php:80
+msgid "Back to top"
+msgstr ""
+
+#: header.php
+msgid "click to skip"
+msgstr ""
+
+#: header.php
+msgid "menu"
+msgstr ""
+
+#: footer.php
+msgid "get in touch"
+msgstr ""
+
+#: footer.php
+msgid "studio"
+msgstr ""
+
+#: footer.php
+msgid "contact"
+msgstr ""
+
+#: footer.php
+msgid "site"
+msgstr ""
+
+#: footer.php
+msgid "made with quiet intent"
+msgstr ""
+
+#: template-parts/global/overlay-menu.php
+msgid "navigation"
+msgstr ""
+
+#: template-parts/section/hero.php
+msgid "scroll to explore ↓"
+msgstr ""
+
+#: template-parts/section/showreel.php
+msgid "showreel"
+msgstr ""
+
+#: template-parts/section/showreel.php
+msgid "play reel"
+msgstr ""
+
+#: template-parts/section/showreel.php
+msgid "reel placeholder"
+msgstr ""
+
+#: template-parts/section/services.php
+msgid "what we do"
+msgstr ""
+
+#: template-parts/section/services.php
+msgid "capabilities"
+msgstr ""
+
+#: template-parts/section/services.php
+msgid "Six ways in."
+msgstr ""
+
+#: template-parts/section/services.php
+msgid "scroll to explore"
+msgstr ""
+
+#: template-parts/section/studio.php
+msgid "projects shipped"
+msgstr ""
+
+#: template-parts/section/studio.php
+msgid "clients worldwide"
+msgstr ""
+
+#: template-parts/section/studio.php
+msgid "industry awards"
+msgstr ""
+
+#: template-parts/section/studio.php
+msgid "years in practice"
+msgstr ""
+
+#: index.php
+msgid "journal"
+msgstr ""
+
+#: index.php
+msgid "Journal"
+msgstr ""
+
+#: index.php
+msgid "Nothing here yet."
+msgstr ""
+
+#: page.php
+msgid "Edit page"
+msgstr ""
+
+#: single.php
+msgid "Edit post"
+msgstr ""
+
+#: 404.php
+msgid "lost signal"
+msgstr ""
+
+#: 404.php
+msgid "The page you asked for is not here — but the studio is."
+msgstr ""
+
+#: 404.php
+msgid "← back to index"
+msgstr ""
+
+#: inc/customizer.php
+msgid "ThreeKG site"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Contact details, header copy and social links for the global shell."
+msgstr ""
+
+#: inc/customizer.php
+msgid "Contact e-mail"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Contact"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Footer CTA text"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Available for projects"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Availability badge"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Header"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Header descriptor"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Location label"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Social"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Instagram URL"
+msgstr ""
+
+#: inc/customizer.php
+msgid "LinkedIn URL"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Behance URL"
+msgstr ""

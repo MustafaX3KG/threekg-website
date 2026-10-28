@@ -1,0 +1,77 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 2,
+	"settings": {
+		"appearanceTools": false,
+		"layout": {
+			"contentSize": "72rem",
+			"wideSize": "120rem"
+		},
+		"color": {
+			"custom": true,
+			"palette": [
+				{
+					"slug": "ink",
+					"color": "#101010",
+					"name": "Ink"
+				},
+				{
+					"slug": "bg",
+					"color": "#f3f2ed",
+					"name": "Background"
+				},
+				{
+					"slug": "muted",
+					"color": "#6e6c64",
+					"name": "Muted"
+				},
+				{
+					"slug": "accent",
+					"color": "#ff3b00",
+					"name": "Accent"
+				}
+			]
+		},
+		"typography": {
+			"customFontSize": true,
+			"fontFamilies": [
+				{
+					"fontFamily": "'Inter Tight', sans-serif",
+					"slug": "heading",
+					"name": "Inter Tight"
+				},
+				{
+					"fontFamily": "'IBM Plex Mono', monospace",
+					"slug": "mono",
+					"name": "IBM Plex Mono"
+				}
+			]
+		},
+		"spacing": {
+			"units": ["px", "rem", "vw"]
+		}
+	},
+	"styles": {
+		"color": {
+			"background": "var(--bg)",
+			"text": "var(--ink)"
+		},
+		"typography": {
+			"fontFamily": "var(--wp--preset--font-family--heading)",
+			"lineHeight": "1.2"
+		},
+		"elements": {
+			"heading": {
+				"typography": {
+					"fontWeight": "500",
+					"letterSpacing": "-0.03em"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "var(--wp--preset--color--ink)"
+				}
+			}
+		}
+	}
+}
