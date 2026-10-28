@@ -5,8 +5,8 @@ This checklist is intentionally unstarted. The builder should check items only a
 ## Decisions and prerequisites
 
 - [ ] Canonical design/source-of-truth differences resolved
-- [ ] Native theme or Elementor approach confirmed
-- [ ] ACF/ACF Pro availability confirmed
+- [x] Native theme + core Block Editor approach confirmed; Elementor excluded
+- [ ] ACF Pro license/install availability confirmed (architecture approved and required)
 - [ ] Theme-owned or companion-plugin CPT decision confirmed
 - [ ] Supported WordPress and PHP versions confirmed
 - [ ] Font hosting strategy approved
@@ -44,6 +44,11 @@ This checklist is intentionally unstarted. The builder should check items only a
 
 ## Phase 3 — Global options and editable homepage
 
+- [ ] ThreeKG Core companion plugin created and packaged
+- [ ] ACF Pro dependency check/admin notice implemented
+- [ ] Eight `threekg/*` section blocks registered through `block.json`
+- [ ] ThreeKG Landing Page pattern implemented
+- [ ] Block editor previews and editor styles implemented
 - [ ] Global contact/social settings implemented
 - [ ] Availability/location settings implemented
 - [ ] Hero fields implemented
@@ -168,6 +173,12 @@ Tested `http://3kg-website-testing-local.local/` on 2026-10-28 after the user in
 - WordPress is configured to show latest posts (`home blog`), and `front-page.php` outputs the Loop's post content directly. Changing Reading Settings alone will not produce the canonical site because the required sections are absent from the theme template and currently exist only as manually assembled Elementor widgets.
 
 **Builder action:** fix items 1–6 above in the native theme before asking the user to retest. As an immediate defensive correction, never add `is-loading` unless loader markup is guaranteed to render, and ensure the class is removed on DOM ready when `#loader` is absent. This defensive fix does not replace implementing the complete front-page template and global shell.
+
+### 2026-10-28 — Phase 3 authorized: editable-page plugin stack
+
+The user confirmed the rebuilt theme is uploaded and working and authorized the editable-page phase. The approved stack is the native WordPress Block Editor, a repository-owned **ThreeKG Core** companion plugin, and a client-supplied licensed copy of **ACF Pro**. Elementor and other general-purpose builders are explicitly excluded. Contact Form 7 and one SEO plugin may be added later only when those features enter scope; neither is a page-building dependency.
+
+Builder must now implement Phase 3 only from the updated `PLAN.md`: package `wp-plugins/threekg-core`, register all eight `threekg/*` section blocks with `block.json`, provide the ThreeKG Landing Page pattern and global settings, migrate the front page to saved-block-or-canonical-fallback rendering, and verify that ACF inactivity cannot break the public site. Do not begin Project/Job CPT, archive, project-detail, career, migration, or production-hardening work in this phase.
 
 ### 2026-10-28 — Builder reconciliation: native `threekg` theme rebuilt and verified
 

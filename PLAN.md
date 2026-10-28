@@ -10,6 +10,51 @@ The repository contains three related implementations:
 
 Build a fresh, installable classic/hybrid WordPress theme from the canonical static files. Preserve the current markup classes and interactions where practical so visual regression is minimized. Do not require Elementor. Use native WordPress templates, reusable block patterns, registered menus, Customizer/site options, and structured content types. ACF Pro is recommended for flexible project galleries and option pages; if ACF is not available, the theme must fail gracefully and retain basic title/content/featured-image editing.
 
+### Approved editing architecture (2026-10-28)
+
+The site will use the native WordPress Block Editor as its visual page builder. Do not add Elementor, Elementor Pro, Divi, WPBakery, Bricks, Beaver Builder, or another general-purpose page builder. Those tools can rewrite the carefully matched markup, duplicate IDs, enqueue competing CSS/JavaScript, and break the canvas/showreel/services interactions.
+
+Required plugin stack:
+
+1. **ThreeKG Core** — a repository-owned companion plugin delivered under `/wp-plugins/threekg-core/` and packaged as `/build/threekg-core.zip`. It owns the custom ThreeKG blocks, their `block.json` registrations, local ACF JSON/PHP field definitions, editor previews, block patterns, validation, and—during later phases—the Project and Job content types. Content types and reusable editing tools belong here rather than in the theme so content remains available after a theme switch.
+2. **Advanced Custom Fields Pro** — client-supplied licensed plugin, using the current supported stable release. ACF Pro is required because the approved editor needs ACF Blocks, repeaters, flexible content/gallery fields, and global options pages. Do not bundle ACF Pro or a license key in the repository or release ZIP. Register blocks with `block.json` and `register_block_type()`; do not build new blocks with the legacy `acf_register_block_type()` API.
+3. **WordPress Block Editor (core)** — not an extra plugin, but the required page-editing UI. Do not install the experimental Gutenberg plugin on production. The theme and ThreeKG Core plugin must target the editor included with the supported WordPress release.
+
+Optional plugins, not dependencies of the theme or page builder:
+
+- **Contact Form 7** only if the client replaces the current mailto CTA with a real form. The ThreeKG Core plugin may supply a styled pattern/shortcode wrapper, but form delivery and storage must remain plugin-owned.
+- **Yoast SEO or Rank Math** (choose one at launch, never both) for SEO metadata and social previews. Templates must not require either plugin.
+- A caching/security/backup plugin selected by the host may be added during Phase 6 after regression testing. It must not combine/defer the animation bundles without verification.
+
+No other plugin is required to create pages, rearrange sections, or build a page similar to the homepage.
+
+Editor behavior and content portability:
+
+- Each designed section becomes a first-class `threekg/*` ACF Block with a live or representative editor preview and the same semantic classes as the front end: Hero, Showreel, Marquee, Featured Work, Clients, Studio, Services Story, and Contact CTA.
+- A **ThreeKG Landing Page** block pattern inserts the approved homepage section order. A user can create another landing page by inserting this pattern, then editing, removing, or reordering its blocks.
+- Global header, overlay-menu contact details, footer contact details, social URLs, availability, descriptor, and loader defaults live on one ThreeKG Settings options page. Navigation continues to use WordPress menu locations.
+- The homepage template renders saved blocks when the assigned front page has ThreeKG block content. If the page is empty or ACF Pro is inactive, it renders the current canonical defaults. It must never render both paths at once.
+- Block markup is server-rendered and escaped. Animation scripts initialize by scoped `data-*` roots, tolerate multiple valid block instances, and do not depend on editor-generated wrapper depth.
+- Blocks that require singleton IDs or global behavior (Loader and global navigation) are not insertable page blocks. They remain global template components driven by options.
+- The editor exposes only meaningful design controls. Users can change content, media, links, order, visibility, and approved variants; arbitrary colors, spacing, IDs, or class names are not exposed when they would break pixel parity.
+- All field groups are version-controlled in the ThreeKG Core plugin. Production configuration must not depend on manually recreating fields in wp-admin.
+- ACF Pro absence produces a dismissible administrator notice and preserves the canonical front end; it must not cause a fatal error or blank page.
+
+Editable block contract:
+
+| Block | Editable content | Constraints |
+|---|---|---|
+| Hero | Kicker, three headline lines, italic accent, supporting labels, optional background media | One per landing page; canvas remains theme-owned |
+| Showreel | Video, poster, year, duration label, caption, play label | Uses attachment IDs and keyboard-safe single control |
+| Marquee | Repeating text items | Minimum 2 items; duplicated track is render-only |
+| Featured Work | Heading, eyebrow/year, source mode, selected projects/manual cards, card order | CMS mode becomes authoritative in Phase 4; manual fallback allowed before then |
+| Clients | Heading, year, client name/logo, sector, tile order | Empty tiles are not rendered; logos require alt text |
+| Studio | Heading, lead/body copy, optional image, statistics | Stats repeater has sensible maximum and empty-state handling |
+| Services Story | Heading and six services with name, hint, stable symbol key | Exactly six published items; keys are unique and limited to the six supported geometries |
+| Contact CTA | Label, CTA text, email/link, optional local footer columns | Global defaults inherited from ThreeKG Settings and overridable per page only when enabled |
+
+Phase 3 is now the authorized next implementation phase. Its first deliverable is the ThreeKG Core plugin plus editable blocks/options and migration of the existing front page to the block-backed/fallback rendering contract. Do not begin Projects/Jobs CMS work from Phase 4 in the same change.
+
 ---
 
 ## 1. Complete repository inventory
@@ -345,7 +390,7 @@ Implementation notes:
 
 ### 3.2 Homepage fields
 
-Use one ACF field group attached to the page assigned as the static front page. Keep fields grouped by section. Use native blocks for long-form content only where arbitrary layout is appropriate.
+Use the approved `threekg/*` ACF Blocks for page sections. Each block owns a version-controlled field group in ThreeKG Core; global-only fields live on the ThreeKG Settings options page. The assigned front page may use the ThreeKG Landing Page pattern, while an empty page retains the canonical template fallback.
 
 | Section/content | Editing method |
 |---|---|
@@ -437,16 +482,24 @@ Acceptance checklist:
 
 ### Phase 3 — Global options and editable homepage
 
-Add Customizer/options settings and front-page field groups. Replace static text/media with escaped dynamic values while retaining defaults.
+Build and package the ThreeKG Core companion plugin, register the block-based editing system and global options, then migrate the homepage to saved-block rendering with canonical fallbacks. Replace static text/media with escaped dynamic values while retaining defaults. Phase 3 must not register the Project or Job content types; those remain Phase 4/5 work.
 
 Acceptance checklist:
 
+- [ ] `/wp-plugins/threekg-core/` and `/build/threekg-core.zip` install and activate without warnings or fatal errors.
+- [ ] The plugin declares/checks ACF Pro cleanly, shows an actionable admin notice when absent, and never exposes or bundles a license key.
+- [ ] Hero, Showreel, Marquee, Featured Work, Clients, Studio, Services Story, and Contact CTA are registered as `threekg/*` blocks through `block.json`.
+- [ ] A ThreeKG Landing Page pattern can create a similar page in the canonical section order without PHP/HTML editing.
+- [ ] Editor previews are recognizable, fields are clearly labelled, and section blocks can be reordered or removed without duplicate IDs or broken front-end scripts.
 - [ ] Client can edit hero copy, showreel, marquee, clients, studio text/stats, services, contact details, and social links without code.
 - [ ] Empty optional fields do not leave broken markup or excessive gaps.
 - [ ] Services repeater enforces/makes clear the six-item animation limit.
 - [ ] All text, URLs, HTML, and media output is escaped appropriately.
 - [ ] Revisions or field history are available for substantial page content.
-- [ ] Theme works with ACF disabled using documented defaults/basic content, or shows a clear admin dependency notice without breaking the front end.
+- [ ] Homepage renders saved ThreeKG blocks when present and canonical defaults when empty; it never renders both paths.
+- [ ] Theme works with ACF disabled using documented canonical defaults plus a clear admin dependency notice without breaking the front end.
+- [ ] Existing Phase 1 design and animations remain pixel-matched at desktop/tablet/mobile widths after block migration.
+- [ ] PHP lint, block metadata validation, JavaScript syntax checks, editor smoke tests, front-end console checks, and install tests pass for both theme and companion plugin.
 
 ### Phase 4 — Projects CMS, Work archive, and project pages
 
@@ -613,9 +666,9 @@ Acceptance checklist:
 
 ## Planning decisions required before implementation
 
-- Confirm whether the root homepage or the simplified `webflow-template/index.html` headline/section set is authoritative when the two differ. Default recommendation: root homepage interactions/content order, plus multi-page Work/Careers architecture and blur menu.
-- Confirm native theme vs Elementor. Default recommendation: native classic/hybrid theme with no Elementor requirement.
-- Confirm whether ACF Pro is licensed. Default recommendation: ACF Pro for flexible galleries/options, with guarded fallbacks.
+- **Resolved:** root homepage interactions/content order are authoritative, plus the multi-page Work/Careers architecture and blur-menu direction where it does not conflict.
+- **Resolved:** native classic/hybrid theme plus the WordPress Block Editor; Elementor and other general-purpose builders are excluded.
+- **Resolved architecture:** ACF Pro is the required licensed editing dependency, supplied by the client; the build must retain guarded canonical fallbacks when it is inactive. Installation/license availability still needs operational confirmation on staging.
 - Confirm whether Projects/Jobs must live in a companion plugin. Default recommendation: companion plugin for portability, unless one-ZIP theme delivery is mandatory.
 - Approve or replace all placeholder projects, clients, statistics, jobs, emails, social URLs, videos, and imagery before migration.
 - Confirm external Google Fonts vs approved self-hosting.
