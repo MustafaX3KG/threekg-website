@@ -802,6 +802,20 @@
 
     window.addEventListener("scroll", queueUpdate, { passive: true });
     window.addEventListener("resize", queueUpdate);
+
+    /* belt-and-braces: whenever the section (or its edges) are near the
+       viewport, force an update and make the stage symbol visible even if
+       scroll-position logic stalls (fast wheel, momentum scrolling) */
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          svg.classList.add("is-visible");
+          queueUpdate();
+        });
+      }, { rootMargin: "25% 0px 25% 0px" }).observe(section);
+    }
+
     queueUpdate();
   })();
 

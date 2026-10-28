@@ -474,6 +474,13 @@ body::after {
   opacity: 1;
   transform: none;
 }
+/* reveal IO fail-safe: a card re-appears the moment it enters the
+   viewport on its own — independent of the scroll-position engine —
+   and never disappears again once revealed */
+.services__card.is-in {
+  opacity: 1;
+  transform: none;
+}
 .services__number {
   color: var(--muted);
   margin-bottom: auto;
