@@ -1,20 +1,15 @@
 (function () {
   "use strict";
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ----------------------------------------------------------
-     showreel — video after hero
-     click to play/pause, auto-pause when scrolled out of view
-     ---------------------------------------------------------- */
-  const reelFrame = document.querySelector(".showreel__frame");
-  const reelVideo = document.getElementById("showreelVideo");
-  const reelPlay = document.getElementById("showreelPlay");
-
-  if (reelFrame && reelVideo && reelPlay) {
+  document.querySelectorAll("[data-threekg-showreel]").forEach(function (root) {
+    const reelFrame = root.querySelector(".showreel__frame");
+    const reelVideo = root.querySelector("[data-showreel-video]");
+    const reelPlay = root.querySelector("[data-showreel-play]");
+    if (!reelFrame || !reelVideo || !reelPlay) return;
     function reelToggle() {
       if (reelVideo.readyState < 2) {
-        reelPlay.querySelector(".mono").textContent = "video not found";
+        const label = reelPlay.querySelector(".mono");
+        if (label) label.textContent = "video unavailable";
         return;
       }
       if (reelVideo.paused) {
@@ -29,8 +24,11 @@
       }
     }
 
-    reelFrame.addEventListener("click", reelToggle);
-    reelFrame.addEventListener("keydown", function (e) {
+    reelPlay.addEventListener("click", function (e) {
+      e.stopPropagation();
+      reelToggle();
+    });
+    reelPlay.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         reelToggle();
@@ -50,7 +48,8 @@
 
     // error fallback: show a note if the file is still a placeholder / missing
     reelVideo.addEventListener("error", function () {
-      reelPlay.querySelector(".mono").textContent = "add assets/showreel.mp4";
+      const label = reelPlay.querySelector(".mono");
+      if (label) label.textContent = "video unavailable";
     });
-  }
+  });
 })();

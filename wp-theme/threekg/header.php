@@ -11,10 +11,14 @@
 <!-- custom cursor -->
 <div class="cursor" aria-hidden="true"></div>
 
-<?php if ( is_front_page() ) : ?>
+<?php
+$threekg_loader_enabled = ! function_exists( 'threekg_core_option' ) || (bool) threekg_core_option( 'loader_enabled', true );
+$threekg_loader_video = function_exists( 'threekg_core_option' ) ? threekg_core_option( 'loader_video', 0 ) : 0;
+$threekg_loader_src = $threekg_loader_video && function_exists( 'wp_get_attachment_url' ) ? wp_get_attachment_url( (int) $threekg_loader_video ) : get_theme_file_uri( 'assets/brand/motion/loader.mp4' );
+if ( is_front_page() && $threekg_loader_enabled ) : ?>
 <!-- ================= BRAND PRELOAD ================= -->
 <div class="loader" id="loader" aria-hidden="true">
-  <video class="loader__video" id="loaderVideo" src="<?php echo esc_url( get_theme_file_uri( 'assets/brand/motion/loader.mp4' ) ); ?>" autoplay muted playsinline></video>
+  <video class="loader__video" id="loaderVideo" src="<?php echo esc_url( $threekg_loader_src ); ?>" autoplay muted playsinline></video>
   <span class="mono loader__skip"><?php esc_html_e( 'click to skip', 'threekg' ); ?></span>
 </div>
 <?php endif; ?>

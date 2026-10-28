@@ -1,5 +1,5 @@
 <!-- ================= SERVICES ================= -->
-<section class="services" id="services">
+<section class="services" id="services" data-threekg-services="canonical">
   <div class="services__inner">
     <div class="services__stage">
       <div class="section-head reveal">
@@ -9,11 +9,11 @@
       </div>
       <div class="services__motion reveal" aria-live="polite">
         <div class="services__morph" aria-hidden="true">
-          <svg class="services__morph-svg" viewBox="-120 -120 240 240" role="presentation"></svg>
+          <svg class="services__morph-svg" data-services-svg viewBox="-120 -120 240 240" role="presentation"></svg>
         </div>
         <div class="services__motion-meta mono">
-          <span class="services__motion-index">00 / 06</span>
-          <span class="services__motion-label"><?php esc_html_e( 'scroll to explore', 'threekg' ); ?></span>
+          <span class="services__motion-index" data-services-index>00 / 06</span>
+          <span class="services__motion-label" data-services-label><?php esc_html_e( 'scroll to explore', 'threekg' ); ?></span>
         </div>
       </div>
     </div>

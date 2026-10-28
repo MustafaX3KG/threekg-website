@@ -1,6 +1,6 @@
 <!-- ================= HERO ================= -->
-<section class="hero">
-  <canvas class="hero__canvas" id="field" aria-hidden="true"></canvas>
+<section class="hero" data-threekg-hero="canonical">
+  <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
   <div class="hero__inner">
     <p class="mono hero__kicker reveal">(ThreeKG &mdash; independent design studio, est. 2021)</p>
     <h1 class="hero__title">

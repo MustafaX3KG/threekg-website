@@ -6,13 +6,12 @@
   /* ----------------------------------------------------------
      services — direct SVG geometry morphs scrubbed by scroll
      ---------------------------------------------------------- */
-  (function servicesScrollStory() {
-    const section = document.querySelector(".services");
-    const cards = Array.prototype.slice.call(document.querySelectorAll(".services__card"));
-    const svg = document.querySelector(".services__morph-svg");
-    const indexLabel = document.querySelector(".services__motion-index");
-    const nameLabel = document.querySelector(".services__motion-label");
-    if (!section || !cards.length || !svg) return;
+  document.querySelectorAll("[data-threekg-services]").forEach(function servicesScrollStory(section) {
+    const cards = Array.prototype.slice.call(section.querySelectorAll(".services__card"));
+    const svg = section.querySelector("[data-services-svg]");
+    const indexLabel = section.querySelector("[data-services-index]");
+    const nameLabel = section.querySelector("[data-services-label]");
+    if (!cards.length || !svg) return;
 
     const NS = "http://www.w3.org/2000/svg";
     const N = 192;
@@ -252,5 +251,5 @@
     }
 
     queueUpdate();
-  })();
+  });
 })();

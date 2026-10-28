@@ -60,7 +60,7 @@ add_action(
 		/*
 		 * Homepage-only animation bundles stay off generic templates.
 		 */
-		if ( is_front_page() ) {
+		if ( is_front_page() || ( function_exists( 'threekg_has_saved_sections' ) && threekg_has_saved_sections() ) ) {
 			foreach ( array( 'hero-canvas', 'services-morph', 'showreel' ) as $module ) {
 				wp_enqueue_script(
 					"threekg-{$module}",

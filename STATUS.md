@@ -44,21 +44,21 @@ This checklist is intentionally unstarted. The builder should check items only a
 
 ## Phase 3 — Global options and editable homepage
 
-- [ ] ThreeKG Core companion plugin created and packaged
-- [ ] ACF Pro dependency check/admin notice implemented
-- [ ] Eight `threekg/*` section blocks registered through `block.json`
-- [ ] ThreeKG Landing Page pattern implemented
-- [ ] Block editor previews and editor styles implemented
-- [ ] Global contact/social settings implemented
-- [ ] Availability/location settings implemented
-- [ ] Hero fields implemented
-- [ ] Showreel fields implemented
-- [ ] Marquee fields implemented
-- [ ] Client list fields implemented
-- [ ] Studio copy/stat fields implemented
-- [ ] Services fields and six-item validation implemented
-- [ ] Missing-ACF fallback/admin notice implemented
-- [ ] Output sanitization and escaping reviewed
+- [x] ThreeKG Core companion plugin created and packaged
+- [x] ACF Pro dependency check/admin notice implemented
+- [x] Eight `threekg/*` section blocks registered through `block.json`
+- [x] ThreeKG Landing Page pattern implemented
+- [x] Block editor previews and editor styles implemented
+- [x] Global contact/social settings implemented
+- [x] Availability/location settings implemented
+- [x] Hero fields implemented
+- [x] Showreel fields implemented
+- [x] Marquee fields implemented
+- [x] Client list fields implemented
+- [x] Studio copy/stat fields implemented
+- [x] Services fields and six-item validation implemented
+- [x] Missing-ACF fallback/admin notice implemented
+- [x] Output sanitization and escaping reviewed
 - [ ] Phase 3 acceptance checklist passed
 
 ## Phase 4 — Projects CMS and templates
@@ -240,3 +240,50 @@ Builder updates in response to the review above. The complete native theme now e
 | 7 | Header/menu/footer match static design desktop/mobile | PARTIAL (markup ported; screenshot verification unavailable locally today) |
 | 8 | Menu keyboard operable (Escape, focus, aria) | PARTIAL (toggle/Escape work; trap/return deferred) |
 | 9 | Generic templates render without errors | PASS (harness-rendered without PHP warnings) |
+
+### 2026-10-28 — Phase 3 implementation: native blocks, options, and guarded ACF Pro
+
+Implemented only the authorized Phase 3 scope at commit base `4c9c39e`. No Project/Job content types, taxonomies, archives, project pages, careers behavior, migration, or Phase 5/6 feature work was added.
+
+**Delivered**
+
+- Added repository-owned `/wp-plugins/threekg-core/` and installable `/build/threekg-core.zip` (16,070 bytes; 23 ZIP entries; one top-level `threekg-core/` plugin directory).
+- Registered Hero, Showreel, Marquee, Featured Work, Clients, Studio, Services Story, and Contact CTA as `threekg/*` server-rendered ACF blocks. Every block has its own `block.json`; registration uses `register_block_type()` only. No ACF code, license, or key is bundled.
+- Added guarded, version-controlled PHP field definitions: attachment-ID image/video/file fields; limited repeaters; explicit labels/instructions; six-row Services validation with unique supported symbol keys; manual Featured Work fields pending the Phase 4 CMS.
+- Added a canonical-order **ThreeKG Landing Page** pattern and editor preview styling. Blocks retain native page revisions because values are block/post meta managed through the Block Editor.
+- Added a **ThreeKG Settings** ACF options page for contact email/CTA, social URLs, availability, descriptor, location, and loader enable/video defaults. Reads safely bridge existing `threekg_*` Customizer values when no ACF option has been saved.
+- Changed `front-page.php` to render saved ThreeKG blocks exactly once when ACF Pro is active and the page contains them; otherwise it renders the canonical static template parts. A saved Contact CTA suppresses only the duplicate template CTA while the global footer columns remain template-owned.
+- When ACF Pro is absent, ThreeKG blocks/patterns are not registered, a capability-gated actionable dismissible admin warning is shown, and saved block comments cannot replace the canonical public fallback.
+- Refactored Hero, Showreel, and Services initialization to scoped `data-*` roots. Multiple block instances receive unique roots and no longer share `field`, `showreelVideo`, `showreelPlay`, or services SVG IDs. Loader and global navigation remain template-owned. Existing reduced-motion handling remains in place.
+
+**Exact verification evidence**
+
+- PHP lint: all 33 PHP files under `wp-theme/` and `wp-plugins/` passed `C:\Users\3KG\.t3\projects\threekg-website-testing\tools\php\php.exe -l` with no syntax errors.
+- JavaScript syntax: every `.js` file under `wp-theme/threekg/assets/js/` and `harness/` passed `node --check`.
+- Block metadata: `harness/validate-phase3.js` parsed all eight `block.json` files and verified the expected `threekg/{slug}` names and shared server-render callback.
+- Registration/field smoke: `harness/wp-guard/plugin-render.php` verified 8 registered blocks, 8 block field groups + 1 options group, and the landing pattern.
+- Render matrix: canonical plugin-inactive front page; ACF/plugin-active empty page; plugin-active saved-block page; ACF-inactive saved-comment fallback; and saved-block subdirectory variant all rendered through PHP without fatal errors. The ACF-inactive harness also verified the dismissible dependency notice.
+- Exclusivity/scoping: saved rendering uses the actual `front-page.php`, asserts one Contact CTA, and verifies distinct roots for repeated Hero instances with no legacy singleton canvas ID.
+- Network paths: 52 CSS/JS/image/video requests extracted from root and `/studio-site/` renders returned HTTP 200 through the strict harness server; a deliberately missing asset returned 404.
+- Packaging: ZIP inventory contains only plugin runtime files (main plugin file, 8 metadata files, 8 render templates, 4 include files, and editor CSS).
+
+**Known limitations / empirical checks still required**
+
+- A licensed current ACF Pro install and a real WordPress admin were not available in this checkout. The Block Editor field UI, media selection, save/reload flow, revisions UI, options-page persistence, and ZIP activation still need an empirical staging smoke test; therefore the overall Phase 3 acceptance checkbox remains open.
+- No browser automation target was attached. Pixel parity, console behavior, responsive layouts, actual video playback, and multi-instance scroll animation must be visually checked in the real site. The render/network harness proves markup and local paths, not visual identity.
+- Featured Work intentionally uses manual cards in Phase 3. Selecting the clearly labelled CMS mode does not query Projects until the separately authorized Phase 4.
+- Canonical sample project/client/stat/media copy remains placeholder content pending Phase 5 approval/replacement.
+- Existing pre-Phase-3 open items (overlay blur, menu focus trap/return, real theme screenshot) were not expanded into this phase.
+
+**Local install and test order**
+
+1. Back up staging; keep the rebuilt `build/threekg.zip` theme installed and active.
+2. Install and activate the client's licensed current ACF Pro ZIP. Do not place its ZIP, plugin files, or license key in this repository.
+3. Install and activate `build/threekg-core.zip`. Confirm no PHP warnings with `WP_DEBUG` enabled and confirm **ThreeKG Settings** appears in wp-admin.
+4. Open ThreeKG Settings, verify bridged Customizer values, save once, and test header/menu/footer contact, social, availability, descriptor, location, and loader settings.
+5. Create a Page, insert **ThreeKG Landing Page**, edit attachment-backed media and repeaters, reorder/remove sections, save, reload, and inspect a revision.
+6. Assign that page under Settings → Reading. Confirm saved blocks appear once and in the saved order. Remove all blocks/save and confirm only canonical defaults return.
+7. Temporarily deactivate ACF Pro (leave ThreeKG Core active): confirm the dismissible admin notice and an intact canonical front end. Reactivate ACF Pro and confirm saved content returns.
+8. Temporarily deactivate ThreeKG Core: confirm the canonical front end remains intact. Reactivate it afterward.
+9. Repeat at a subdirectory URL and inspect Network/Console for zero failed local assets and zero exceptions. Test two Hero, Showreel, or Services blocks on a non-production page to confirm instance isolation.
+10. Check desktop/tablet/mobile and reduced-motion mode, especially Hero canvas, showreel control, services morph, Contact CTA/footer continuity, and loader enabled/disabled behavior.

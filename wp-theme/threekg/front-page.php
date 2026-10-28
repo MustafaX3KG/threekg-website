@@ -9,12 +9,19 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
-get_template_part( 'template-parts/section/hero' );
-get_template_part( 'template-parts/section/showreel' );
-get_template_part( 'template-parts/section/marquee' );
-get_template_part( 'template-parts/section/work' );
-get_template_part( 'template-parts/section/clients' );
-get_template_part( 'template-parts/section/studio' );
-get_template_part( 'template-parts/section/services' );
+if ( threekg_has_saved_sections() ) {
+	while ( have_posts() ) {
+		the_post();
+		the_content();
+	}
+} else {
+	get_template_part( 'template-parts/section/hero' );
+	get_template_part( 'template-parts/section/showreel' );
+	get_template_part( 'template-parts/section/marquee' );
+	get_template_part( 'template-parts/section/work' );
+	get_template_part( 'template-parts/section/clients' );
+	get_template_part( 'template-parts/section/studio' );
+	get_template_part( 'template-parts/section/services' );
+}
 
 get_footer();

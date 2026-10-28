@@ -6,8 +6,9 @@
   /* ----------------------------------------------------------
      canvas dot field (hero)
      ---------------------------------------------------------- */
-  const canvas = document.getElementById("field");
-  if (canvas) {
+  document.querySelectorAll("[data-threekg-hero]").forEach(function (root) {
+    const canvas = root.querySelector("[data-hero-canvas]");
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w = 0, h = 0, dpr = 1;
     let dots = [];
@@ -81,13 +82,13 @@
       rafId = requestAnimationFrame(loop);
     }
 
-    window.addEventListener("pointermove", function (e) {
+    root.addEventListener("pointermove", function (e) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     }, { passive: true });
 
-    window.addEventListener("pointerleave", function () {
+    root.addEventListener("pointerleave", function () {
       mouse.x = -9999;
       mouse.y = -9999;
     });
@@ -114,5 +115,5 @@
 
     resize();
     if (!reduceMotion) rafId = requestAnimationFrame(loop);
-  }
+  });
 })();

@@ -1,0 +1,1 @@
+{"apiVersion":3,"name":"threekg/studio","version":"1.0.0","title":"ThreeKG Studio","category":"design","icon":"admin-home","description":"Studio introduction, image and statistics.","acf":{"blockVersion":3,"mode":"preview","renderCallback":"threekg_core_render_block"},"supports":{"align":false,"anchor":false,"customClassName":false},"textdomain":"threekg-core"}

@@ -26,6 +26,8 @@ function esc_js( $text ) { return json_encode( (string) $text ); }
 function sanitize_key( $key ) { return preg_replace( '/[^a-z0-9_\-]/', '', strtolower( (string) $key ) ); }
 function sanitize_email( $email ) { return filter_var( (string) $email, FILTER_VALIDATE_EMAIL ) ? (string) $email : ''; }
 function sanitize_text_field( $text ) { return trim( strip_tags( (string) $text ) ); }
+function sanitize_html_class( $text ) { return preg_replace( '/[^A-Za-z0-9_-]/', '-', (string) $text ); }
+function sanitize_file_name( $text ) { return preg_replace( '/[^A-Za-z0-9._-]/', '-', (string) $text ); }
 function wp_strip_all_tags( $text ) { return trim( preg_replace( '/<[^>]*>/', ' ', (string) $text ) ); }
 function wp_kses_post( $text ) { return (string) $text; }
 
@@ -85,6 +87,9 @@ function have_posts() {
 function the_post() { /* no-op single-post loop */ }
 function is_singular( $type = '' ) { return true; }
 function get_the_ID() { return $GLOBALS['threekg_post']['ID']; }
+function get_queried_object_id() { return $GLOBALS['threekg_post']['ID']; }
+function get_post_field( $field, $id = 0 ) { return 'post_content' === $field ? $GLOBALS['threekg_post']['content'] : ''; }
+function has_block( $name, $content = '' ) { return false !== strpos( (string) $content, '<!-- wp:' . $name ); }
 function get_the_title() { return $GLOBALS['threekg_post']['title']; }
 function the_title() { echo esc_html( $GLOBALS['threekg_post']['title'] ); }
 function get_the_content() { return $GLOBALS['threekg_post']['content']; }
@@ -128,7 +133,7 @@ function get_the_archive_title() { return 'Journal'; }
 $GLOBALS['threekg_stack'] = array( 'header' => true );
 function get_header( $name = '' ) { require $GLOBALS['threekg_theme_dir'] . 'header.php'; }
 function get_footer( $name = '' ) { require $GLOBALS['threekg_theme_dir'] . 'footer.php'; }
-function get_template_part( $slug, $name = '' ) {
+function get_template_part( $slug, $name = '', $args = array() ) {
 	$file = get_theme_file_path( ( $name ? "{$slug}-{$name}" : $slug ) . '.php' );
 	require $file;
 }
@@ -154,6 +159,13 @@ function get_bloginfo( $show = '' ) { return 'ThreeKG — WordPress'; }
 function get_theme_mod( $id, $default = '' ) {
 	$over = $GLOBALS['threekg_theme_mods'][ $id ] ?? null;
 	return $over !== null ? $over : $default;
+}
+function wp_get_attachment_url( $id ) { return $GLOBALS['threekg_attachments'][ (int) $id ] ?? false; }
+function wp_get_attachment_image( $id, $size = 'full', $icon = false, $attr = array() ) {
+	$url = wp_get_attachment_url( $id );
+	if ( ! $url ) return '';
+	$class = $attr['class'] ?? '';
+	return '<img class="' . esc_attr( $class ) . '" src="' . esc_url( $url ) . '" alt="Attachment ' . (int) $id . '" />';
 }
 function has_custom_logo() { return ! empty( $GLOBALS['threekg_custom_logo'] ); }
 function the_custom_logo() {
@@ -186,6 +198,8 @@ function wp_enqueue_style( $handle, $src = '', $deps = array(), $ver = false ) {
 function wp_enqueue_script( $handle, $src = '', $deps = array(), $ver = false, $footer = false ) {
 	$GLOBALS['threekg_enqueued_scripts'][ $handle ] = array( 'src' => $src, 'ver' => $ver, 'footer' => $footer );
 }
+function wp_unique_id( $prefix = '' ) { static $id = 0; return $prefix . ++$id; }
+function wp_json_encode( $value ) { return json_encode( $value ); }
 
 /** Prints head links from the recorded enqueues. */
 function threekg_print_head_assets() {
@@ -229,4 +243,11 @@ function register_nav_menus( $locations ) {
 	$GLOBALS['threekg_menu_locations'] = array_merge( $GLOBALS['threekg_menu_locations'] ?? array(), $locations );
 	return true;
 }
+function register_block_type( $path ) { $GLOBALS['threekg_registered_blocks'][] = $path; return true; }
+function register_block_pattern_category( $name, $args ) { return true; }
+function register_block_pattern( $name, $args ) { $GLOBALS['threekg_patterns'][ $name ] = $args; return true; }
+function plugin_dir_path( $file ) { return rtrim( dirname( $file ), '/\\' ) . DIRECTORY_SEPARATOR; }
+function plugin_dir_url( $file ) { return '/wp-content/plugins/threekg-core/'; }
+function current_user_can( $capability ) { return true; }
+function wp_enqueue_block_style() { return true; }
 defined( 'ABSPATH' ) || define( 'ABSPATH', $GLOBALS['threekg_theme_dir'] );

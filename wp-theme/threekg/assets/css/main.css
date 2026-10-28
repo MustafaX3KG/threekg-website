@@ -15,6 +15,7 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
+.contact-cta{background:var(--invert-bg);color:var(--invert-ink);padding:clamp(72px,10vw,150px) var(--pad);margin:0}.contact-cta+.footer{margin-top:0;padding-top:clamp(40px,6vw,80px)}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }

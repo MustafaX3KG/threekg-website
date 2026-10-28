@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * Contact e-mail address.
  */
 function threekg_email(): string {
-	return (string) get_theme_mod( 'threekg_email', 'hello@threekg.studio' );
+	return function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'email', 'hello@threekg.studio' ) : (string) get_theme_mod( 'threekg_email', 'hello@threekg.studio' );
 }
 
 /**
@@ -26,7 +26,7 @@ function threekg_email_url(): string {
  */
 function threekg_cta_text(): string {
 	$default  = 'Start a project';
-	$mod = (string) get_theme_mod( 'threekg_cta_text', $default );
+	$mod = function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'cta_text', $default ) : (string) get_theme_mod( 'threekg_cta_text', $default );
 	return '' === trim( $mod ) ? $default : $mod;
 }
 
@@ -34,21 +34,21 @@ function threekg_cta_text(): string {
  * Availability badge text.
  */
 function threekg_availability(): string {
-	return (string) get_theme_mod( 'threekg_availability', 'Available for projects' );
+	return function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'availability', 'Available for projects' ) : (string) get_theme_mod( 'threekg_availability', 'Available for projects' );
 }
 
 /**
  * Header descriptor line.
  */
 function threekg_descriptor(): string {
-	return (string) get_theme_mod( 'threekg_descriptor', 'minimalism · space · motion' );
+	return function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'descriptor', 'minimalism · space · motion' ) : (string) get_theme_mod( 'threekg_descriptor', 'minimalism · space · motion' );
 }
 
 /**
  * Location label (header + footer columns).
  */
 function threekg_location(): string {
-	return (string) get_theme_mod( 'threekg_location', 'working worldwide' );
+	return function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'location', 'working worldwide' ) : (string) get_theme_mod( 'threekg_location', 'working worldwide' );
 }
 
 /**
@@ -58,9 +58,9 @@ function threekg_location(): string {
  */
 function threekg_social_links(): array {
 	$socials = array(
-		'Instagram' => (string) get_theme_mod( 'threekg_instagram', '' ),
-		'LinkedIn'  => (string) get_theme_mod( 'threekg_linkedin', '' ),
-		'Behance'   => (string) get_theme_mod( 'threekg_behance', '' ),
+		'Instagram' => function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'instagram', '' ) : (string) get_theme_mod( 'threekg_instagram', '' ),
+		'LinkedIn'  => function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'linkedin', '' ) : (string) get_theme_mod( 'threekg_linkedin', '' ),
+		'Behance'   => function_exists( 'threekg_core_option' ) ? (string) threekg_core_option( 'behance', '' ) : (string) get_theme_mod( 'threekg_behance', '' ),
 	);
 
 	foreach ( $socials as $label => $url ) {

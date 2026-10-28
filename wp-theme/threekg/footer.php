@@ -2,11 +2,10 @@
 
 <!-- ================= FOOTER / CONTACT ================= -->
 <footer class="footer" id="contact">
-  <span class="mono footer__cap reveal">(<?php esc_html_e( 'get in touch', 'threekg' ); ?>)</span>
-  <a class="footer__cta reveal" href="<?php echo esc_url( threekg_email_url() ); ?>">
-    <?php echo esc_html( threekg_cta_text() ); ?>
-    <span class="footer__arrow">&rarr;</span>
-  </a>
+  <?php if ( ! threekg_has_saved_block( 'contact-cta' ) ) : ?>
+    <span class="mono footer__cap reveal">(<?php esc_html_e( 'get in touch', 'threekg' ); ?>)</span>
+    <a class="footer__cta reveal" href="<?php echo esc_url( threekg_email_url() ); ?>"><?php echo esc_html( threekg_cta_text() ); ?><span class="footer__arrow">&rarr;</span></a>
+  <?php endif; ?>
 
   <div class="footer__grid">
     <div class="mono footer__col">

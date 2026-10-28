@@ -1,0 +1,1 @@
+{"apiVersion":3,"name":"threekg/marquee","version":"1.0.0","title":"ThreeKG Marquee","category":"design","icon":"editor-insertmore","description":"Repeated services marquee.","acf":{"blockVersion":3,"mode":"preview","renderCallback":"threekg_core_render_block"},"supports":{"align":false,"anchor":false,"customClassName":false},"textdomain":"threekg-core"}
